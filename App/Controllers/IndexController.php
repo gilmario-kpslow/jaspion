@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use SEFIN\Controller\Controller;
+use App\Controllers\Controller;
 
 class IndexController extends Controller {
 

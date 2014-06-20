@@ -1,6 +1,6 @@
 <?php
 
-namespace SEFIN\init;
+namespace App\Init;
 
 /**
  * Description of Bootstrap

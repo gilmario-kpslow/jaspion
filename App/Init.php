@@ -8,9 +8,9 @@
 
 namespace App;
 
-use SEFIN\init\Bootstrap;
+use App\Init\Bootstrap;
 
-class init extends Bootstrap {
+class Init extends Bootstrap {
 
     function __construct() {
         parent::__construct();

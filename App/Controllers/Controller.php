@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-namespace SEFIN\Controller;
+namespace App\Controllers;
 
 /**
  * Description of Action

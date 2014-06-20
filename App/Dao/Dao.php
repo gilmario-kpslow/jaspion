@@ -1,8 +1,8 @@
 <?php
 
-namespace SEFIN\DAO;
+namespace App\DAO;
 
-use App\init;
+use App\Init;
 
 /**
  * Description of DAO
@@ -15,7 +15,7 @@ abstract class Dao {
     protected $table;
 
     function __construct() {
-        $this->db = init::getDb();
+        $this->db = Init::getDb();
     }
 
     public function getAll() {
