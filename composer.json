@@ -1,0 +1,16 @@
+{
+    "name": "sefin/mvc",
+    "require": {
+        "php": ">=5.3"
+    },
+    "minimum-stability": "alpha",
+    "authors": [
+        {
+            "name": "Wesley Willians",
+            "email": "wesleywillians@gmail.com"
+        }
+    ],
+    "config": {
+        "bin-dir": "bin"
+    }
+}
