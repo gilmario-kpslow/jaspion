@@ -4,9 +4,9 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Sistema de Crédito - Nota Caucaia</title>
-        <link href="/siscredito/resources/css/padrao.css" rel="stylesheet"/>
+        <link href="<?php echo $this->css('padrao'); ?>" rel="stylesheet"/>
         <!--<link href="/siscredito/resources/css/bootstrap-theme.min.css" rel="stylesheet"/>-->
-        <link href="/siscredito/resources/css/bootstrap.css" rel="stylesheet"/>
+        <link href="<?php echo $this->css('bootstrap'); ?>" rel="stylesheet"/>
     </header>
 
     <body>
@@ -25,44 +25,44 @@
         <nav class="navbar navbar-default navbar-fixed-top" role="navigation" style="margin-top: 50px;">
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                    <li><a href = "/siscredito"><span class="glyphicon glyphicon-home"></span> Inicio</a></li>
+                    <li><a href = "/jaspion"><span class="glyphicon glyphicon-home"></span> Inicio</a></li>
                 </ul>
                 <?php if (!isset($_SESSION['usuario'])) { ?>
                     <ul class="nav navbar-nav navbar-right">
-                        <li><a href="/siscredito/cidadao/solicitacao"><span class="glyphicon glyphicon-plus-sign"></span> Participar</a></li>
-                        <li><a href="/siscredito/usuario/logar"><span class="glyphicon glyphicon-user"></span> Entrar</a></li>
+                        <li><a href="/jaspion/cidadao/solicitacao"><span class="glyphicon glyphicon-plus-sign"></span> Participar</a></li>
+                        <li><a href="/jaspion/usuario/logar"><span class="glyphicon glyphicon-user"></span> Entrar</a></li>
                     </ul>
                 <?php } else { ?>
                     <ul class="nav navbar-nav">
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle"  data-toggle="dropdown" ><span class="glyphicon glyphicon-user"></span> Beneficiario<b class="caret"></b></a>
                             <ul class="dropdown-menu">
-                                <li><a href = "/siscredito/usuario/meucadastro"><span class="glyphicon glyphicon-plus-sign"></span> Meu Cadastro</a></li>
+                                <li><a href = "/jaspion/usuario/meucadastro"><span class="glyphicon glyphicon-plus-sign"></span> Meu Cadastro</a></li>
                             </ul>
                         </li>
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle"  data-toggle="dropdown"><span class="glyphicon glyphicon-usd"></span> Notas Fiscais<b class="caret"></b></a>
                             <ul class="dropdown-menu">
-                                <li><a href = "/siscredito/nota/lancar"><span class="glyphicon glyphicon-plus-sign"></span> Cadastrar notas</a></li>
-                                <li><a href = "/siscredito/nota"> <span class="glyphicon glyphicon-credit-card"></span> Consultar Notas</a></li>
+                                <li><a href = "/jaspion/nota/lancar"><span class="glyphicon glyphicon-plus-sign"></span> Cadastrar notas</a></li>
+                                <li><a href = "/jaspion/nota"> <span class="glyphicon glyphicon-credit-card"></span> Consultar Notas</a></li>
                             </ul>
                         </li>
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle"  data-toggle="dropdown"><span class="glyphicon glyphicon-list-alt"></span> IPTU<b class="caret"></b></a>
                             <ul class="dropdown-menu">
-                                <li><a href = "/siscredito/iptu/creditar"><span class="glyphicon glyphicon-book"></span> Creditar IPTU</a></li>
+                                <li><a href = "/jaspion/iptu/creditar"><span class="glyphicon glyphicon-book"></span> Creditar IPTU</a></li>
                             </ul>
                         </li>
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle"  data-toggle="dropdown"><span class="glyphicon glyphicon-list-alt"></span> Relatórios<b class="caret"></b></a>
                             <ul class="dropdown-menu">
-                                <li><a href = "/siscredito/relatorio/saldo"><span class="glyphicon glyphicon-book"></span> Saldo </a></li>
-                                <li><a href = "/siscredito/relatorio/creditos"><span class="glyphicon glyphicon-search"></span> Creditos Emitidos</a></li>
+                                <li><a href = "/jaspion/relatorio/saldo"><span class="glyphicon glyphicon-book"></span> Saldo </a></li>
+                                <li><a href = "/jaspion/relatorio/creditos"><span class="glyphicon glyphicon-search"></span> Creditos Emitidos</a></li>
                             </ul>
                         </li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
-                        <li ><a href="/siscredito/usuario/logout"><span class="glyphicon glyphicon-off"></span> Sair</a></li>
+                        <li ><a href="/jaspion/usuario/logout"><span class="glyphicon glyphicon-off"></span> Sair</a></li>
                     </ul>
                 <?php } ?>
             </div>
@@ -105,12 +105,12 @@
             </div>
         </div>
         <div id="erro"></div>
-        <script src="/siscredito/resources/js/jquery-1.10.2.min.js" type="text/javascript" ></script>
-        <script src="/siscredito/resources/js/bootstrap.min.js" type="text/javascript" ></script>
-        <script src="/siscredito/resources/js/jquery.maskMoney.js" type="text/javascript" ></script>
-        <script src="/siscredito/resources/js/jquery.mask.min.js" type="text/javascript" ></script>
-        <script src="/siscredito/resources/js/functions.js" type="text/javascript" ></script>
-        <script src="/siscredito/resources/js/enter_api.js" type="text/javascript" ></script>
+        <script src="<?php echo $this->js("jquery-1.10.2.min.js"); ?>" type="text/javascript" ></script>
+        <script src="<?php echo $this->js("bootstrap.min.js"); ?>" type="text/javascript" ></script>
+        <script src="<?php echo $this->js("jquery.maskMoney.js"); ?>" type="text/javascript" ></script>
+        <script src="<?php echo $this->js("jquery.mask.min.js"); ?>" type="text/javascript" ></script>
+        <script src="<?php echo $this->js("functions.js"); ?>" type="text/javascript" ></script>
+        <script src="<?php echo $this->js("enter_api.js"); ?>" type="text/javascript" ></script>
         <?php $this->scripts(); ?>
     </body>
 </html>

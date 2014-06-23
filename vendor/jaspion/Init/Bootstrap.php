@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Init;
+namespace jaspion\Init;
 
 /**
  * Description of Bootstrap
@@ -11,6 +11,11 @@ abstract class Bootstrap {
 
     public function __construct() {
         $this->tempoSessao();
+        $fileconfig = file_get_contents("../App/Config/parametros.json");
+        $parametros = json_decode($fileconfig);
+        foreach ($parametros->sistema as $sistema) {
+            define('DIR_ROOT', $sistema->diretorioRaiz);
+        }
         $this->run($this->getUrl());
     }
 

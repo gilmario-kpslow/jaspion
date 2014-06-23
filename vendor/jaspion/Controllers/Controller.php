@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-namespace App\Controllers;
+namespace jaspion\Controllers;
 
 /**
  * Description of Action
@@ -41,6 +41,14 @@ class Controller {
         $atual = get_class($this);
         $singleClassName = strtolower(str_replace("Controller", "", str_replace("App\\Controllers\\", "", $atual)));
         include_once '../App/Views/' . $singleClassName . "/" . $this->action . '.phtml';
+    }
+    
+    public function css($filename){
+        return DIR_ROOT.'/resources/css/'.$filename.'.css';
+    }
+    
+    public function js($filename){
+        return DIR_ROOT.'/resources/js/'.$filename.'.js';
     }
 
     public function scripts() {

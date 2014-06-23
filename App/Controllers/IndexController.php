@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use App\Controllers\Controller;
+use App\Jaspion\Controllers\Controller;
 
 class IndexController extends Controller {
 

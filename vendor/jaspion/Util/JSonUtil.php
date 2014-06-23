@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Util;
+namespace jaspion\Util;
 
 /**
  * Description of JSonUtil

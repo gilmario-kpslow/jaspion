@@ -12,6 +12,5 @@ ini_set('error_log', '/home/gilmario/error_log.txt');
 error_reporting(E_ALL);
 
 require_once '../vendor/autoload.php';
-
 session_start();
 $init = new App\Init();
