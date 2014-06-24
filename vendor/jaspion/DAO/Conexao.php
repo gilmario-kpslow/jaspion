@@ -14,6 +14,8 @@ namespace jaspion\DAO;
  * @author allan
  */
 class Conexao {
+    
+    protected static $pdo;
 
     public static function getDb($identificador) {
         $fileconfig = file_get_contents("../App/Config/conexoes.json");
@@ -21,17 +23,18 @@ class Conexao {
 
         foreach ($parametros->conexoes as $parametro) {
             if ($parametro->identificador == $identificador) {
-                define('PDO_DRIVE', $parametro->driver);
-                define('PDO_HOST', $parametro->host);
-                define('PDO_DBNAME', $parametro->dbname);
-                define('PDO_USERNAME', $parametro->username);
-                define('PDO_PASSWORD', $parametro->password);
+                $drive =  $parametro->driver;
+                $host = $parametro->host;
+                $dbname = $parametro->dbname;
+                $username = $parametro->username;
+                $password = $parametro->password;
                 break;
             }
         }
-        $db = new \PDO(PDO_DRIVE . ":host=" . PDO_HOST . ";dbname=" . PDO_DBNAME, PDO_USERNAME, PDO_PASSWORD);
-        $db->setAttribute(\PDO::ATTR_AUTOCOMMIT, false);
-        return $db;
+        if(is_null(self::$pdo[$identificador])){
+            self::$pdo[$identificador] = new \PDO($drive . ":host=" . $host . ";dbname=" . $dbname, $username, $password);
+        }
+        return self::$pdo[$identificador];
     }
 
 }

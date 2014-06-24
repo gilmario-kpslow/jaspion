@@ -5,7 +5,8 @@ namespace jaspion\Util;
 /*
  * Esta classe e responsavel por manipula as anotações de outras classes
  */
-
+use ReflectionClass;
+use ReflectionProperty;
 /**
  * Description of Util
  *

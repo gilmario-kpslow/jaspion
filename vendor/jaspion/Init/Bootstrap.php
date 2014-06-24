@@ -8,14 +8,21 @@ namespace jaspion\Init;
  * @author gilmario
  */
 abstract class Bootstrap {
+    
+    protected static $sistema;
+    protected static $globais;
 
     public function __construct() {
         $this->tempoSessao();
         $fileconfig = file_get_contents("../App/Config/parametros.json");
         $parametros = json_decode($fileconfig);
-        foreach ($parametros->sistema as $sistema) {
+        
+        self::$sistema = $parametros->sistema;
+        foreach (self::$sistema as $sistema) {
             define('DIR_ROOT', $sistema->diretorioRaiz);
+            self::$globais = isset($sistema->varGlobais[0]->nome) ? $sistema->varGlobais : null; 
         }
+        
         $this->run($this->getUrl());
     }
 
@@ -146,6 +153,13 @@ abstract class Bootstrap {
             }
         }
         $_SESSION["TEMPO"] = time();
+    }
+    
+    public static function getSistema(){
+        return self::$sistema;
+    } 
+    public static function getGlobais(){
+        return self::$globais;
     }
 
 }

@@ -3,6 +3,7 @@
 namespace jaspion\DAO;
 
 use jaspion\DAO\Conexao;
+use jaspion\Models\Model;
 
 /**
  * Description of DAO
@@ -13,13 +14,16 @@ abstract class DAO {
 
     protected $db;
     protected $table;
+    protected $model;
 
-    function __construct($conexao) {
+    function __construct($conexao, Model $object) {
         $this->db = Conexao::getDb($conexao);
+        $this->model = $object;
     }
 
-    public function salvar(Array $dados) {
+    public function salvar(Model $object) {
         try {
+            $dados = $object->setBanco();
             $this->db->beginTransaction();
             $campos = implode(',', array_keys($dados));
             $valores = array_values($dados);
@@ -41,8 +45,9 @@ abstract class DAO {
         }
     }
 
-    public function atualizar(Array $dados, $where = null) {
+    public function atualizar(Model $object, $where = null) {
         try {
+            $dados = $object->setBanco();
             $this->db->beginTransaction();
             $where = ($where != null) ? "WHERE {$where}" : "";
             foreach ($dados as $ind => $val) {
@@ -53,7 +58,7 @@ abstract class DAO {
                 $campos[] = "{$ind} = {$val}";
             }
             $campos = implode(', ', $campos);
-            $this->db->query("UPDATE {$this->getTabela()} SET {$campos} {$where}");
+            $this->db->query("UPDATE {$this->table} SET {$campos} {$where}");
             $this->db->commit();
         } catch (PDOException $ex) {
             $this->db->rollBack();
@@ -64,7 +69,7 @@ abstract class DAO {
     public function deletar($where) {
         try {
             $this->db->beginTransaction();
-            $this->db->query("DELETE FROM {$this->getTabela()} WHERE {$where}");
+            $this->db->query("DELETE FROM {$this->table} WHERE {$where}");
             $this->db->commit();
         } catch (PDOException $ex) {
             $this->db->rollBack();
@@ -76,9 +81,16 @@ abstract class DAO {
         try {
             $this->db->beginTransaction();
             $where = ($where != null) ? "WHERE {$where}" : "";
-            $q = $this->db->query("SELECT * FROM {$this->getTabela()} {$where}");
+            $q = $this->db->query("SELECT * FROM {$this->table} {$where}");
             $this->db->commit();
-            return $q->fetchAll();
+
+            $objects = array();
+            foreach ($q->fetchAll() as $rs) {
+                $this->model->popularBanco($rs);
+                $objects[] = $this->model;
+            }
+            return $objects;
+            
         } catch (PDOException $ex) {
             $this->db->rollBack();
             return $ex;
@@ -94,8 +106,13 @@ abstract class DAO {
             $this->db->beginTransaction();
             $query = "SELECT * FROM {$this->table} WHERE {$campo} like '{$nome}%'";
             $row = $this->db->query($query);
-            $return = $row->fetchAll();
             $this->db->commit();
+            $objects = array();
+            foreach ($row->fetchAll() as $rs) {
+                $this->model->popularBanco($rs);
+                $objects[] = $this->model;
+            }
+            return $objects;
         } catch (PDOException $ex) {
             $this->db->rollBack();
             return $ex;

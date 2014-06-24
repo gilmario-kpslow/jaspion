@@ -20,8 +20,10 @@ class Controller {
     protected $mobile;
     protected $script = "";
 
+    
     function __construct() {
         $this->view = new \stdClass();
+        $this->getGlobais();
         $this->view->mensagem = "";
         $this->mobile = strstr($_SERVER['HTTP_USER_AGENT'], 'Mobile');
     }
@@ -42,17 +44,39 @@ class Controller {
         $singleClassName = strtolower(str_replace("Controller", "", str_replace("App\\Controllers\\", "", $atual)));
         include_once '../App/Views/' . $singleClassName . "/" . $this->action . '.phtml';
     }
-    
-    public function css($filename){
-        return DIR_ROOT.'/resources/css/'.$filename.'.css';
+
+    public function css($filename) {
+        return DIR_ROOT . '/resources/css/' . $filename . '.css';
     }
-    
-    public function js($filename){
-        return DIR_ROOT.'/resources/js/'.$filename.'.js';
+
+    public function js($filename) {
+        return DIR_ROOT . '/resources/js/' . $filename . '.js';
+    }
+
+    public function img($filename) {
+        return DIR_ROOT . '/resources/images/' . $filename;
     }
 
     public function scripts() {
         echo $this->script;
+    }
+
+    public function getGlobais() {
+        $global = \jaspion\Init\Bootstrap::getGlobais();
+        if (!is_null($global)) {
+            foreach ($global as $globais) {
+                $this->criarGlobais($globais->nome, $globais->valor, $globais->use);
+            }
+        }
+    }
+
+    public function criarGlobais($nome, $valor, $use = null) {
+        if ($use != null) {
+            $objeto = new $use();
+            $this->view->$nome = $objeto->$valor();
+        } else {
+            $this->view->$nome = $valor;
+        }
     }
 
     /**
@@ -67,21 +91,6 @@ class Controller {
             case 2:return $this->view->mensagem = "<div id='alerta' class='alert alert-warning' style='text-align:center;'> <button type='button' class='close' data-dismiss='alert'>×</button>" . $men . "</div>";
             default :return $this->view->mensagem = "<div id='alerta' class='alert alert-info' style='text-align:center;'><button type='button' class='close' data-dismiss='alert'>×</button>" . $men . "</div>";
         }
-    }
-
-    protected function criaJSONObject($classe, $objeto) {
-        $json = "{";
-        $metodos = get_class_methods($classe);
-        foreach ($metodos as $key => $value) {
-            $r = strpos($value, "get");
-            if (strpos($value, "get") !== false) {
-                $var = lcfirst(str_replace("get", "", $value));
-                $json .= "\"{$var}\" : \"{$objeto->$value()}\",";
-            }
-        }
-        $json = substr($json, 0, -1);
-        $json .= "}";
-        echo utf8_encode($json);
     }
 
 }
