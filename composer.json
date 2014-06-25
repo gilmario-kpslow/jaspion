@@ -1,16 +1,17 @@
 {
-    "name": "sefin/mvc",
+    "name": "jaspion",
     "require": {
         "php": ">=5.3"
     },
     "minimum-stability": "alpha",
     "authors": [
         {
-            "name": "Wesley Willians",
-            "email": "wesleywillians@gmail.com"
+            "name": "José Gilmário da Costa Batista",
+            "email": "gilmariosoftware@gmail.com"
+        },
+        {
+            "name": "Antonio Allan",
+            "email": "antonioallansantos@gmail.com"
         }
-    ],
-    "config": {
-        "bin-dir": "bin"
-    }
+    ]
 }
