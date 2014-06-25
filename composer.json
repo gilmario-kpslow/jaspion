@@ -3,7 +3,10 @@
     "require": {
         "php": ">=5.3"
     },
-    "minimum-stability": "alpha",
+    "type": "library",
+    "description": "Uma Framework leve em PHP",
+    "keywords": ["framework"],
+    "homepage": "http://www.sefincaucaia.com.br",
     "authors": [
         {
             "name": "José Gilmário da Costa Batista",
