@@ -20,7 +20,6 @@ class Controller {
     protected $mobile;
     protected $script = "";
 
-    
     function __construct() {
         $this->view = new \stdClass();
         $this->getGlobais();

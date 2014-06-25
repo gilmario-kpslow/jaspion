@@ -6,13 +6,14 @@
  * @author gilmario
  */
 
-namespace App;
+namespace jaspion\Init;
 
-use App\Jaspion\Init\Bootstrap;
+use jaspion\Init\Bootstrap;
 
 class Init extends Bootstrap {
-    
+
     function __construct() {
         parent::__construct();
     }
+
 }
