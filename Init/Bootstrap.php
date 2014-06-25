@@ -8,21 +8,19 @@ namespace jaspion\Init;
  * @author gilmario
  */
 abstract class Bootstrap {
-    
+
     protected static $sistema;
     protected static $globais;
 
     public function __construct() {
-        $this->tempoSessao();
         $fileconfig = file_get_contents("../App/Config/parametros.json");
         $parametros = json_decode($fileconfig);
-        
         self::$sistema = $parametros->sistema;
         foreach (self::$sistema as $sistema) {
             define('DIR_ROOT', $sistema->diretorioRaiz);
-            self::$globais = isset($sistema->varGlobais[0]->nome) ? $sistema->varGlobais : null; 
+            self::$globais = isset($sistema->varGlobais[0]->nome) ? $sistema->varGlobais : null;
         }
-        
+
         $this->run($this->getUrl());
     }
 
@@ -32,50 +30,38 @@ abstract class Bootstrap {
 
     protected function run($url) {
         $array = explode("/", $url);
-        $controle = $array[2];
-        $acao = "index";
+        $controle = count($array) > 3 ? $array[2] : "jaspion";
+        $acao = count($array) > 3 ? $array[3] : "index";
         $parametro = null;
-        if ($controle == "") {
-            $controle = "index";
-        }
-        if (count($array) > 3) {
-            $acao = $array[3];
-        }
         if (count($array) > 4) {
-            $parametro = $array[4];
+            $parametro = $this->carregaParametros($array);
         }
-        if ($acao == "") {
-            $acao = "index";
-        }
-        $this->executaAcao($controle, $acao, $parametro);
+        $this->prepararController($controle, $acao, $parametro);
     }
 
-    private function executaAcao($controle, $acao, $parametro = null) {
-        if ($this->trataAcao($acao)) {
-            $class = "App\\Controllers\\" . ucfirst($controle) . "Controller";
-            if (!class_exists($class) || !method_exists($class, $acao)) {
-                $this->erro404();
-            } else {
-                $this->executar($class, $acao, $parametro);
-            }
+    private function carregaParametros($arr) {
+        $result = array();
+        for ($i = 3; $i <= count($arr); $i++) {
+            $result[] = $arr[$i];
         }
+        return $result;
     }
 
-    private function executar($controle, $acao, $parametro = null) {
-        if ($this->exigeSeguranca($controle, $acao)) {
-            if ($this->logado()) {
-                $this->chamaAcao($controle, $acao, $parametro);
-            } else {
-                $controller = new \App\Controllers\UsuarioController();
-                $controller->mensagem("Sua sessão foi encerrada.");
-                $controller->login();
-            }
+    private function prepararController($controle, $acao, $parametro = null) {
+        $class = "\App\\Controllers\\" . ucfirst($controle) . "Controller";
+        $metodo = $acao . "Action";
+        if (!class_exists($class) || !method_exists($class, $metodo)) {
+            $this->erro404();
         } else {
-            $this->chamaAcao($controle, $acao, $parametro);
+            $this->verificarFiltros($class, $metodo, $parametro);
         }
     }
 
-    private function chamaAcao($controle, $acao, $parametro = null) {
+    private function verificarFiltros($controle, $acao, $parametro = null) {
+        $this->executarMetodoController($controle, $acao, $parametro);
+    }
+
+    private function executarMetodoController($controle, $acao, $parametro = null) {
         $controller = new $controle();
         if ($parametro !== null) {
             $controller->$acao($parametro);
@@ -84,40 +70,9 @@ abstract class Bootstrap {
         }
     }
 
-    private function trataAcao($acao) {
-        if ($acao === "logout" || $acao === "meucadastro") {
-            return true;
-        } else {
-            return $this->seguranca();
-        }
-    }
-
-    private function seguranca() {
-        try {
-            if (isset($_SESSION['senha']) && isset($_SESSION['usuario'])) {
-                return $this->verificaCadastro();
-            } else {
-                return true;
-            }
-        } catch (Exception $ex) {
-            $this->erro500($ex);
-        }
-    }
-
     public function index() {
-        $index = new \App\Controllers\IndexController();
+        $index = new \JaspionController();
         $index->index();
-    }
-
-    private function verificaCadastro() {
-        if ($_SESSION['senha'] === 'S') {
-            $controle = new \App\Controllers\UsuarioController();
-            $controle->mensagem("Você deve mudar sua senha para poder utilizar o sistema.");
-            $controle->meucadastro();
-            return false;
-        } else {
-            return true;
-        }
     }
 
     private function erro404() {
@@ -130,35 +85,11 @@ abstract class Bootstrap {
         $index->erro500($ex);
     }
 
-    private function exigeSeguranca($class, $acao) {
-        $classe = new \ReflectionClass($class);
-        $classeComent = $classe->getDocComment();
-        if (strpos($classeComent, "@secured") !== false) {
-            return true;
-        } else {
-            $metode = new \ReflectionMethod($class, $acao);
-            $comentario = $metode->getDocComment();
-            return strpos($comentario, "@secured") !== false;
-        }
-    }
-
-    private function logado() {
-        return isset($_SESSION['cpf']);
-    }
-
-    private function tempoSessao() {
-        if (isset($_SESSION["TEMPO"])) {
-            if ($_SESSION["TEMPO"] < (time() - 900)) {
-                session_unset();
-            }
-        }
-        $_SESSION["TEMPO"] = time();
-    }
-    
-    public static function getSistema(){
+    public static function getSistema() {
         return self::$sistema;
-    } 
-    public static function getGlobais(){
+    }
+
+    public static function getGlobais() {
         return self::$globais;
     }
 
