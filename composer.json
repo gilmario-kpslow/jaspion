@@ -1,8 +1,6 @@
 {
     "name": "jaspion",
-    "require": {
-        "php": ">=5.3"
-    },
+    "minimum-stability": "dev",
     "type": "library",
     "description": "Uma Framework leve em PHP",
     "keywords": ["framework"],
@@ -16,5 +14,8 @@
             "name": "Antonio Allan",
             "email": "antonioallansantos@gmail.com"
         }
-    ]
+    ],
+    "require": {
+        "php": ">=5.3"
+    }
 }

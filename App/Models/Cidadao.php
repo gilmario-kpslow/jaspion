@@ -24,6 +24,7 @@ class Cidadao {
     private $situacao;
     private $codigoContribuinteSam;
     private $dataCriacao;
+    private $horaCriacao;
 
     function __construct() {
 
@@ -147,6 +148,14 @@ class Cidadao {
 
     public function setDataCriacao($dataCriacao) {
         $this->dataCriacao = $dataCriacao;
+    }
+
+    public function getHoraCriacao() {
+        return $this->horaCriacao;
+    }
+
+    public function setHoraCriacao($horaCriacao) {
+        $this->horaCriacao = $horaCriacao;
     }
 
     public function getHash() {
