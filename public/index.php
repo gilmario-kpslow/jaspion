@@ -7,5 +7,3 @@ error_reporting(E_ALL);
 require_once '../vendor/autoload.php';
 session_start();
 $init = new jaspion\Init\Init();
-//$init = new jaspion\Init\Init();
-
