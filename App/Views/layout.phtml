@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+    <header>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Demo - Projeto com Jaspion</title>
+        <link href="<?= $this->css('bootstrap-theme.min') ?>" rel="stylesheet"/>
+        <link href="<?= $this->css('bootstrap.min') ?>" rel="stylesheet"/>
+        <link href="<?= $this->css('padrao') ?>" rel="stylesheet"/>
+    </header>
+
+    <body>
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <ul class="nav navbar-nav">
+                <li><a><span class="glyphicon glyphicon-globe"></span> <span class="h4">Nota Caucaia</span></a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li ><a><?php if (isset($_SESSION['usuario'])) { ?><span class="glyphicon glyphicon-user"></span>
+                            <?php
+                            echo '<span class="h4">' . $_SESSION['usuario'] . '</span>';
+                        }
+                        ?></a></li>
+            </ul>
+        </nav>
+        <nav class="navbar navbar-default navbar-fixed-top" role="navigation" style="margin-top: 50px;">
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li><a href = "/jaspion"><span class="glyphicon glyphicon-home"></span> Inicio</a></li>
+                </ul>
+                <?php if (!isset($_SESSION['usuario'])) { ?>
+                    <ul class="nav navbar-nav navbar-right">
+                        <!--<li><a href="/siscredito/usuario/logar"><span class="glyphicon glyphicon-user"></span> Entrar</a></li>-->
+                    </ul>
+                <?php } else { ?>
+                    <ul class="nav navbar-nav">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle"  data-toggle="dropdown" ><span class="glyphicon glyphicon-user"></span> Beneficiario<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a href = "/siscredito/usuario/meucadastro"><span class="glyphicon glyphicon-plus-sign"></span> Meu Cadastro</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle"  data-toggle="dropdown"><span class="glyphicon glyphicon-usd"></span> Notas Fiscais<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a href = "/siscredito/nota/lancar"><span class="glyphicon glyphicon-plus-sign"></span> Cadastrar notas</a></li>
+                                <li><a href = "/siscredito/nota"> <span class="glyphicon glyphicon-credit-card"></span> Consultar Notas</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle"  data-toggle="dropdown"><span class="glyphicon glyphicon-list-alt"></span> IPTU<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a href = "/siscredito/iptu/creditar"><span class="glyphicon glyphicon-book"></span> Creditar IPTU</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle"  data-toggle="dropdown"><span class="glyphicon glyphicon-list-alt"></span> Relatórios<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a href = "/siscredito/relatorio/saldo"><span class="glyphicon glyphicon-book"></span> Saldo </a></li>
+                                <li><a href = "/siscredito/relatorio/creditos"><span class="glyphicon glyphicon-search"></span> Creditos Emitidos</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li ><a href="/siscredito/usuario/logout"><span class="glyphicon glyphicon-off"></span> Sair</a></li>
+                    </ul>
+                <?php } ?>
+            </div>
+        </nav>
+        <div style="margin-top: 100px;">
+            <div class="panel panel-danger">
+                <div class="panel-heading "><span class="panel-title">Jaspion Framework Demo</span></div>
+                <div class="panel-body" style="min-height: 500px;">
+                    <div class='alerta'>
+                        <?php echo $this->view->mensagem; ?>
+                    </div>
+                    <?php $this->content(); ?>
+                </div>
+                <div class="panel-footer">
+                    <div class="text-center small">
+                        <span>
+                            Governo Municipal de Caucaia - Secretaria de Finanças, Planejamento e Orçamento - Telefone: (85)3011-0661 - Email: suporte@sefin.caucaia.ce.gov.br
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade bs-example-modal-lg" id="carregando">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h3 class="modal-title"><span id="men_modal"> </span> Aguarde</h3>
+                    </div>
+                    <div class="modal-body">
+                        <div class="progress progress-striped active">
+                            <div class="progress-bar" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                                <div id="men_modal"> </div>
+                                <span class="sr-only"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="erro"></div>
+        <link href="<?= $this->js('jquery-1.10.2.min') ?>" rel="stylesheet"/>
+        <link href="<?= $this->js('bootstrap.min') ?>" rel="stylesheet"/>
+        <?php $this->scripts(); ?>
+    </body>
+</html>

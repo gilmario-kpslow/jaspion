@@ -1,12 +1,10 @@
 {
-    "name": "Jaspion Demo",
+    "name": "jaspion",
     "minimum-stability": "dev",
     "type": "library",
     "description": "Uma Framework leve em PHP",
     "keywords": ["framework"],
-    "require": {
-        "php": ">=5.3"
-    },
+    "homepage": "http://www.sefincaucaia.com.br",
     "authors": [
         {
             "name": "José Gilmário da Costa Batista",
@@ -17,18 +15,7 @@
             "email": "antonioallansantos@gmail.com"
         }
     ],
-    "autoload": {
-        "psr-0": {
-            "App": "/"
-        }
-    },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/gilmario-kpslow/jaspion.git"
-        }
-    ],
     "require": {
-        "jaspion/vendor/jaspion": "dev-master"
+        "php": ">=5.3"
     }
 }

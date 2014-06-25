@@ -1,0 +1,18 @@
+{
+    "conexoes": [{
+            "identificador" : "Fire",
+            "driver": "firebird",
+            "host": "localhost",
+            "dbname": "localhost:DBDSI.GDB",
+            "username": "SYSDBA",
+            "password": "masterkey"
+        },
+        {
+            "identificador" : "Mysql", 
+            "driver": "mysql",
+            "host": "localhost",
+            "dbname": "caucaia",
+            "username": "root",
+            "password": "aln25526"
+        }]
+}
