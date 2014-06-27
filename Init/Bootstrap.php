@@ -30,7 +30,7 @@ abstract class Bootstrap {
 
     protected function run($url) {
         $array = explode("/", $url);
-        $controle = count($array) > 3 ? $array[2] : "jaspion";
+        $controle = count($array) > 3 ? $array[2] : "index";
         $acao = count($array) > 3 ? $array[3] : "index";
         $parametro = null;
         if (count($array) > 4) {
