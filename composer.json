@@ -1,5 +1,5 @@
 {
-    "name": "Jaspion Demo",
+    "name": "jaspion",
     "minimum-stability": "dev",
     "type": "library",
     "description": "Uma Framework leve em PHP",
