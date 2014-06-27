@@ -21,14 +21,5 @@
         "psr-0": {
             "App": "/"
         }
-    },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/gilmario-kpslow/jaspion.git"
-        }
-    ],
-    "require": {
-        "jaspion/vendor/jaspion": "dev-master"
     }
 }
