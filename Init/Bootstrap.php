@@ -71,7 +71,7 @@ abstract class Bootstrap {
     }
 
     public function index() {
-        $index = new \JaspionController();
+        $index = new \App\Controllers\IndexController();
         $index->index();
     }
 
