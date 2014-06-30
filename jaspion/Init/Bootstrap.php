@@ -11,16 +11,17 @@ abstract class Bootstrap {
 
     protected static $sistema;
     protected static $globais;
+    private $filtros = array();
 
     public function __construct() {
         $fileconfig = file_get_contents("../App/Config/parametros.json");
         $parametros = json_decode($fileconfig);
+        $this->criarFiltros();
         self::$sistema = $parametros->sistema;
         foreach (self::$sistema as $sistema) {
             define('DIR_ROOT', $sistema->diretorioRaiz);
             self::$globais = isset($sistema->varGlobais[0]->nome) ? $sistema->varGlobais : null;
         }
-
         $this->run($this->getUrl());
     }
 
@@ -58,7 +59,14 @@ abstract class Bootstrap {
     }
 
     private function verificarFiltros($controle, $acao, $parametro = null) {
-        $this->executarMetodoController($controle, $acao, $parametro);
+        foreach ($this->filtros as $value) {
+            $filtro = new $value();
+            if ($filtro->filtrar()) {
+                $this->executarMetodoController($controle, $acao, $parametro);
+            } else {
+                $filtro->erro();
+            }
+        }
     }
 
     private function executarMetodoController($controle, $acao, $parametro = null) {
@@ -91,6 +99,13 @@ abstract class Bootstrap {
 
     public static function getGlobais() {
         return self::$globais;
+    }
+
+    /**
+     * Inicializar os filtros a partir da con figuração App/Config/filtros
+     */
+    private function criarFiltros() {
+        $this->filtros = file_get_contents("../App/Config/filtros.json");
     }
 
 }
