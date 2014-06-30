@@ -1,5 +1,5 @@
 {
     "filtro": [{
-            "classe": "App/Filtro/UsuarioFiltro"
+            "classe": "App\\Filtro\\UsuarioFiltro"
         }]
 }
