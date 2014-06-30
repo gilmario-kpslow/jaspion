@@ -60,14 +60,16 @@ abstract class Bootstrap {
 
     private function verificarFiltros($controle, $acao, $parametro = null) {
         if (count($this->filtros) > 0) {
-            foreach ($this->filtros as $value) {
-                $filtro = new $value();
-                if ($filtro->filtrar()) {
-                    $this->executarMetodoController($controle, $acao, $parametro);
-                } else {
+            foreach ($this->filtros as $filtroName) {
+                $filtroClass = $filtroName->classe;
+                $filtro = new $filtroClass();
+                if (!$filtro->filtrar()) {
                     $filtro->erro();
+                    return;
                 }
+                
             }
+            $this->executarMetodoController($controle, $acao, $parametro);
         } else {
             $this->executarMetodoController($controle, $acao, $parametro);
         }
@@ -109,7 +111,8 @@ abstract class Bootstrap {
      * Inicializar os filtros a partir da con figuração App/Config/filtros
      */
     private function criarFiltros() {
-        $this->filtros = file_get_contents("../App/Config/filtros.json");
+        $filtros = file_get_contents("../App/Config/filtros.json");
+        $this->filtros = json_decode($filtros);
     }
 
 }
