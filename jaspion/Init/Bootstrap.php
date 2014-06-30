@@ -59,13 +59,17 @@ abstract class Bootstrap {
     }
 
     private function verificarFiltros($controle, $acao, $parametro = null) {
-        foreach ($this->filtros as $value) {
-            $filtro = new $value();
-            if ($filtro->filtrar()) {
-                $this->executarMetodoController($controle, $acao, $parametro);
-            } else {
-                $filtro->erro();
+        if (count($this->filtros) > 0) {
+            foreach ($this->filtros as $value) {
+                $filtro = new $value();
+                if ($filtro->filtrar()) {
+                    $this->executarMetodoController($controle, $acao, $parametro);
+                } else {
+                    $filtro->erro();
+                }
             }
+        } else {
+            $this->executarMetodoController($controle, $acao, $parametro);
         }
     }
 
