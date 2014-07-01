@@ -7,7 +7,7 @@ namespace jaspion\Init;
  *
  * @author gilmario
  */
-abstract class Bootstrap {
+abstract class Jaspion {
 
     protected static $sistema;
     protected static $globais;
@@ -67,7 +67,6 @@ abstract class Bootstrap {
                     $filtro->erro();
                     return;
                 }
-                
             }
             $this->executarMetodoController($controle, $acao, $parametro);
         } else {
