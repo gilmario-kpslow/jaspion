@@ -7,7 +7,7 @@ namespace jaspion\Init;
  *
  * @author gilmario
  */
-abstract class Jaspion {
+class Jaspion {
 
     protected static $sistema;
     protected static $globais;
