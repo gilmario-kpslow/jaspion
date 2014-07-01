@@ -1,5 +1,6 @@
 {
     "filtro": [{
+            "regra": "",
             "classe": "App\\Filtro\\UsuarioFiltro"
         }]
 }

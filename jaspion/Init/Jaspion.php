@@ -60,17 +60,24 @@ class Jaspion {
 
     private function verificarFiltros($controle, $acao, $parametro = null) {
         if (count($this->filtros) > 0) {
-            foreach ($this->filtros as $filtroName) {
+            foreach ($this->filtros->filtro as $filtroName) {
                 $filtroClass = $filtroName->classe;
+                $regra = $filtroName->regra;
                 $filtro = new $filtroClass();
-                if (!$filtro->filtrar()) {
-                    $filtro->erro();
-                    return;
+                if (strpos($controle, $regra) > 0) {
+                    $this->aplicaFiltro($filtro, $controle, $acao, $parametro);
                 }
             }
             $this->executarMetodoController($controle, $acao, $parametro);
         } else {
             $this->executarMetodoController($controle, $acao, $parametro);
+        }
+    }
+
+    private function aplicaFiltro($filtro, $controle, $acao, $parametro = null) {
+        if (!$filtro->filtrar($controle, $acao, $parametro)) {
+            $filtro->erro($controle, $acao, $parametro);
+            return;
         }
     }
 
