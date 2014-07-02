@@ -61,7 +61,7 @@ class Controller {
     }
 
     public function getGlobais() {
-        $global = \jaspion\Init\Bootstrap::getGlobais();
+        $global = \jaspion\Init\Jaspion::getGlobais();
         if (!is_null($global)) {
             foreach ($global as $globais) {
                 $this->criarGlobais($globais->nome, $globais->valor, $globais->use);

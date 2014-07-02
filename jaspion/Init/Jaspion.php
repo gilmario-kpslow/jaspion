@@ -3,7 +3,7 @@
 namespace jaspion\Init;
 
 /**
- * Description of Bootstrap
+ * Description of Jaspion
  *
  * @author gilmario
  */
@@ -61,10 +61,23 @@ class Jaspion {
     private function verificarFiltros($controle, $acao, $parametro = null) {
         if (count($this->filtros) > 0) {
             foreach ($this->filtros->filtro as $filtroName) {
-                $filtroClass = $filtroName->classe;
-                $regra = $filtroName->regra;
-                $filtro = new $filtroClass();
-                if (strpos($controle, $regra) > 0) {
+                $anotationClasse = $filtroName->regra->anotationClass;
+                $anotationMetodo = $filtroName->regra->anotationMethod;
+                $inClasse = false;
+                if ($anotationClasse == '*') {
+                    $inClasse = true;
+                } else if ($anotationClasse != '') {
+                    $arrClas = \jaspion\Util\AnotacaoUtil::gerarArraydeAnotacaoClasse($controle);
+                    $inClasse = in_array($anotationClasse, $arrClas);
+                } else {
+                    if ($anotationMetodo != '') {
+                        $arrMet = \jaspion\Util\AnotacaoUtil::gerarArraydeAnotacaoMetodo($controle, $acao);
+                        $inClasse = in_array($anotationMetodo, $arrClas);
+                    }
+                }
+                if ($inClasse) {
+                    $filtroN = $filtroName->classe;
+                    $filtro = new $filtroN();
                     $this->aplicaFiltro($filtro, $controle, $acao, $parametro);
                 }
             }
