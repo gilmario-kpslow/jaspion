@@ -21,6 +21,7 @@ class AnotacaoUtil {
      */
 
     public static function gerarArraydeAnotacaoAtributo($object) {
+        $anotacoes = array();
         try {
             $reflection = new ReflectionClass(get_class($object));
             foreach ($reflection->getProperties() as $atributos) {
@@ -41,6 +42,7 @@ class AnotacaoUtil {
     }
 
     public static function gerarArraydeAnotacaoMetodo($nomeClass, $metodo) {
+        $anotacoes = array();
         try {
             $reflection = new \ReflectionMethod($nomeClass, $metodo);
             $comment = $reflection->getDocComment();
@@ -50,13 +52,14 @@ class AnotacaoUtil {
             foreach ($arrComment[0] as $value) {
                 $anotacoes[] = str_replace("@", "", $value);
             }
-            return $anotacoes;
         } catch (Exception $exc) {
             return null;
         }
+        return $anotacoes;
     }
 
     public static function gerarArraydeAnotacaoClasse($nomeClass) {
+        $anotacoes = array();
         try {
             $reflection = new \ReflectionClass($nomeClass);
             $comment = $reflection->getDocComment();
@@ -66,10 +69,10 @@ class AnotacaoUtil {
             foreach ($arrComment[0] as $value) {
                 $anotacoes[] = str_replace("@", "", $value);
             }
-            return $anotacoes;
         } catch (Exception $exc) {
             return null;
         }
+        return $anotacoes;
     }
 
 }

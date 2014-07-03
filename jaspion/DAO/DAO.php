@@ -79,18 +79,18 @@ abstract class DAO {
 
     public function listar($where = null) {
         try {
-            $this->db->beginTransaction();
             $where = ($where != null) ? "WHERE {$where}" : "";
             $q = $this->db->query("SELECT * FROM {$this->table} {$where}");
-            $this->db->commit();
-
             $objects = array();
-            foreach ($q->fetchAll() as $rs) {
-                $this->model->popularBanco($rs);
-                $objects[] = $this->model;
+            if ($q) {
+                foreach ($q->fetchAll() as $rs) {
+                    $this->model->popularBanco($rs);
+                    $objects[] = $this->model;
+                }
+                return $objects;
+            } else {
+                return null;
             }
-            return $objects;
-            
         } catch (PDOException $ex) {
             $this->db->rollBack();
             return $ex;
@@ -98,7 +98,12 @@ abstract class DAO {
     }
 
     public function carregar($campo, $id) {
-        return $this->listar("{$campo} = '{$id}'");
+        $o = $this->listar("{$campo} = '{$id}'");
+        if ($o) {
+            return $o[0];
+        } else {
+            return null;
+        }
     }
 
     public function consultar($campo, $nome = "") {

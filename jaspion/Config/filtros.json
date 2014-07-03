@@ -1,6 +1,9 @@
 {
     "filtro": [{
-            "regra": "",
-            "classe": "App\\Filtro\\UsuarioFiltro"
+            "regra": {
+                "anotationClass": "secured",
+                "anotationMethod": ""
+            },
+            "classe": "\\App\\Filtros\\UsuarioFiltro"
         }]
 }

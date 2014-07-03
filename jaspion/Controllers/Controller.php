@@ -27,12 +27,10 @@ class Controller {
         $this->mobile = strstr($_SERVER['HTTP_USER_AGENT'], 'Mobile');
     }
 
-    public function render($action, $layout = true) {
+    public function render($action, $layout = "layout") {
         $this->action = $action;
-        if ($layout && file_exists("../App/Views/layout.phtml") && !$this->mobile) {
-            include_once '../App/Views/layout.phtml';
-        } elseif ($layout && file_exists("../App/Views/mobilayout.phtml") && $this->mobile) {
-            include_once '../App/Views/mobilayout.phtml';
+        if ($layout && file_exists("../App/Views/" . $layout . ".phtml") && !$this->mobile) {
+            include_once '../App/Views/' . $layout . '.phtml';
         } else {
             $this->content();
         }
@@ -54,6 +52,10 @@ class Controller {
 
     public function img($filename) {
         return DIR_ROOT . '/resources/images/' . $filename;
+    }
+
+    public function link($link) {
+        return DIR_ROOT . $link;
     }
 
     public function scripts() {
@@ -85,10 +87,10 @@ class Controller {
      */
     public function mensagem($men, $tipo = null) {
         switch ($tipo) {
-            case 0:return $this->view->mensagem = "<div id='alerta' class='alert alert-success' style='text-align:center;'><button type='button' class='close' data-dismiss='alert'>×</button>" . $men . "</div>";
-            case 1: return $this->view->mensagem = "<div id='alerta' class='alert alert-danger' style='text-align:center;'> <button type='button' class='close' data-dismiss='alert'>×</button>" . $men . "</div>";
-            case 2:return $this->view->mensagem = "<div id='alerta' class='alert alert-warning' style='text-align:center;'> <button type='button' class='close' data-dismiss='alert'>×</button>" . $men . "</div>";
-            default :return $this->view->mensagem = "<div id='alerta' class='alert alert-info' style='text-align:center;'><button type='button' class='close' data-dismiss='alert'>×</button>" . $men . "</div>";
+            case 0:return $this->view->mensagem = "<div id='alerta' class='alert alert-success' style='text-align:center;'><button type='button' class='close' data-dismiss='alert'>×</button><span class='glyphicon glyphicon-exclamation-sign'></span> " . $men . "</div>";
+            case 1: return $this->view->mensagem = "<div id='alerta' class='alert alert-danger' style='text-align:center;'> <button type='button' class='close' data-dismiss='alert'>×</button><span class='glyphicon glyphicon-remove-sign'></span>  " . $men . "</div>";
+            case 2:return $this->view->mensagem = "<div id='alerta' class='alert alert-warning' style='text-align:center;'> <button type='button' class='close' data-dismiss='alert'>×</button><span class='glyphicon glyphicon-warning-sign'></span> " . $men . "</div>";
+            default :return $this->view->mensagem = "<div id='alerta' class='alert alert-info' style='text-align:center;'><button type='button' class='close' data-dismiss='alert'>×</button><span class='glyphicon glyphicon-info-sign'></span> " . $men . "</div>";
         }
     }
 

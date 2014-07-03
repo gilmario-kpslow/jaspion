@@ -18,8 +18,8 @@ class Jaspion {
         $parametros = json_decode($fileconfig);
         $this->criarFiltros();
         self::$sistema = $parametros->sistema;
+        define('DIR_ROOT', self::$sistema->diretorioRaiz);
         foreach (self::$sistema as $sistema) {
-            define('DIR_ROOT', $sistema->diretorioRaiz);
             self::$globais = isset($sistema->varGlobais[0]->nome) ? $sistema->varGlobais : null;
         }
         $this->run($this->getUrl());
@@ -31,7 +31,7 @@ class Jaspion {
 
     protected function run($url) {
         $array = explode("/", $url);
-        $controle = count($array) > 3 ? $array[2] : "index";
+        $controle = count($array) > 2 ? $array[2] : "index";
         $acao = count($array) > 3 ? $array[3] : "index";
         $parametro = null;
         if (count($array) > 4) {
@@ -42,7 +42,7 @@ class Jaspion {
 
     private function carregaParametros($arr) {
         $result = array();
-        for ($i = 3; $i <= count($arr); $i++) {
+        for ($i = 4; $i < count($arr); $i++) {
             $result[] = $arr[$i];
         }
         return $result;
@@ -69,11 +69,9 @@ class Jaspion {
                 } else if ($anotationClasse != '') {
                     $arrClas = \jaspion\Util\AnotacaoUtil::gerarArraydeAnotacaoClasse($controle);
                     $inClasse = in_array($anotationClasse, $arrClas);
-                } else {
-                    if ($anotationMetodo != '') {
-                        $arrMet = \jaspion\Util\AnotacaoUtil::gerarArraydeAnotacaoMetodo($controle, $acao);
-                        $inClasse = in_array($anotationMetodo, $arrClas);
-                    }
+                } if ($anotationMetodo != '') {
+                    $arrMet = \jaspion\Util\AnotacaoUtil::gerarArraydeAnotacaoMetodo($controle, $acao);
+                    $inClasse = in_array($anotationMetodo, $arrMet);
                 }
                 if ($inClasse) {
                     $filtroN = $filtroName->classe;
@@ -90,32 +88,40 @@ class Jaspion {
     private function aplicaFiltro($filtro, $controle, $acao, $parametro = null) {
         if (!$filtro->filtrar($controle, $acao, $parametro)) {
             $filtro->erro($controle, $acao, $parametro);
-            return;
+            exit();
         }
     }
 
     private function executarMetodoController($controle, $acao, $parametro = null) {
         $controller = new $controle();
         if ($parametro !== null) {
-            $controller->$acao($parametro);
+            if (count($parametro) == 1) {
+                $controller->$acao($parametro[0]);
+            }
         } else {
             $controller->$acao();
         }
     }
 
-    public function index() {
-        $index = new \App\Controllers\IndexController();
-        $index->index();
+    private function erro404() {
+        $indexClasse = self::$sistema->baseController->classe;
+        $erro404 = self::$sistema->baseController->erro404;
+        $index = new $indexClasse();
+        $index->$erro404();
     }
 
-    private function erro404() {
-        $index = new \App\Controllers\IndexController();
-        $index->erro404();
+    private function erro400() {
+        $indexClasse = self::$sistema->baseController->classe;
+        $erro400 = self::$sistema->baseController->erro400;
+        $index = new $indexClasse();
+        $index->$erro400();
     }
 
     private function erro500($ex = null) {
-        $index = new \App\Controllers\IndexController();
-        $index->erro500($ex);
+        $indexClasse = self::$sistema->baseController->classe;
+        $erro500 = self::$sistema->baseController->erro500;
+        $index = new $indexClasse();
+        $index->$erro500();
     }
 
     public static function getSistema() {
