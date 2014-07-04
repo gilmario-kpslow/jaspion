@@ -18,9 +18,10 @@ class Controller {
     protected $view;
     protected $action;
     protected $mobile;
-    protected $script = "";
+    private $script;
 
     function __construct() {
+        $this->script = '';
         $this->view = new \stdClass();
         $this->getGlobais();
         $this->view->mensagem = "";
@@ -43,11 +44,11 @@ class Controller {
     }
 
     public function css($filename) {
-        return DIR_ROOT . '/resources/css/' . $filename . '.css';
+        return "<link href='" . DIR_ROOT . "/resources/css/" . $filename . "css' rel='stylesheet'/>";
     }
 
     public function js($filename) {
-        return DIR_ROOT . '/resources/js/' . $filename . '.js';
+        return "<script src='" . DIR_ROOT . '/resources/js/' . $filename . "js' type='text/javascript'></script>";
     }
 
     public function img($filename) {
@@ -60,6 +61,14 @@ class Controller {
 
     public function scripts() {
         echo $this->script;
+    }
+
+    public function addScript($script) {
+        if ($this->script == '') {
+            $this->script = $this->script . "" . $this->js($script);
+        } else {
+            $this->script = $this->script . "\r\v" . $this->js($script);
+        }
     }
 
     public function getGlobais() {
