@@ -44,11 +44,11 @@ class Controller {
     }
 
     public function css($filename) {
-        return "<link href='" . DIR_ROOT . "/resources/css/" . $filename . ".css' rel='stylesheet'/>";
+        return '<link href="' . DIR_ROOT . '/resources/css/' . $filename . '.css" rel="stylesheet"/>';
     }
 
     public function js($filename) {
-        return "<script src='" . DIR_ROOT . '/resources/js/' . $filename . ".js' type='text/javascript'></script>";
+        return '<script src="' . DIR_ROOT . "/resources/js/" . $filename . '.js"" type="text/javascript"></script>';
     }
 
     public function img($filename) {
@@ -80,11 +80,14 @@ class Controller {
         }
     }
 
-    public function criarGlobais($nome, $valor, $use = null) {
-        if ($use != null) {
+    public function criarGlobais($nome, $valor = null, $use = null) {
+        if (!is_null($use) && !is_null($valor)) {
             $objeto = new $use();
             $this->view->$nome = $objeto->$valor();
-        } else {
+        }else if(!is_null($use) && is_null($valor)){ 
+            $objeto = new $use();
+            $this->view->$nome = $objeto;
+        }else {
             $this->view->$nome = $valor;
         }
     }
