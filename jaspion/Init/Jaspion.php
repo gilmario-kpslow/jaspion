@@ -17,11 +17,9 @@ class Jaspion {
         $fileconfig = file_get_contents("../App/Config/parametros.json");
         $parametros = json_decode($fileconfig);
         $this->criarFiltros();
-        self::$sistema = $parametros->sistema;
+        self::$sistema = $parametros->sistema[0];
         define('DIR_ROOT', self::$sistema->diretorioRaiz);
-        foreach (self::$sistema as $sistema) {
-            self::$globais = isset($sistema->varGlobais[0]->nome) ? $sistema->varGlobais : null;
-        }
+        self::$globais = isset(self::$sistema->varGlobais[0]->nome) ? self::$sistema->varGlobais : null;
         $this->run($this->getUrl());
     }
 
@@ -61,8 +59,8 @@ class Jaspion {
     private function verificarFiltros($controle, $acao, $parametro = null) {
         if (count($this->filtros) > 0) {
             foreach ($this->filtros->filtro as $filtroName) {
-                $anotationClasse = $filtroName->regra->anotationClass;
-                $anotationMetodo = $filtroName->regra->anotationMethod;
+                $anotationClasse = $filtroName->regra[0]->anotationClass;
+                $anotationMetodo = $filtroName->regra[0]->anotationMethod;
                 $inClasse = false;
                 if ($anotationClasse == '*') {
                     $inClasse = true;
@@ -104,22 +102,15 @@ class Jaspion {
     }
 
     private function erro404() {
-        $indexClasse = self::$sistema->baseController->classe;
-        $erro404 = self::$sistema->baseController->erro404;
+        $indexClasse = self::$sistema->baseController[0]->classe;
+        $erro404 = self::$sistema->baseController[0]->erro404;
         $index = new $indexClasse();
         $index->$erro404();
     }
 
-    private function erro400() {
-        $indexClasse = self::$sistema->baseController->classe;
-        $erro400 = self::$sistema->baseController->erro400;
-        $index = new $indexClasse();
-        $index->$erro400();
-    }
-
     private function erro500($ex = null) {
-        $indexClasse = self::$sistema->baseController->classe;
-        $erro500 = self::$sistema->baseController->erro500;
+        $indexClasse = self::$sistema->baseController[0]->classe;
+        $erro500 = self::$sistema->baseController[0]->erro500;
         $index = new $indexClasse();
         $index->$erro500();
     }
