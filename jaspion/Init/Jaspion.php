@@ -62,6 +62,7 @@ class Jaspion {
                 $anotationClasse = $filtroName->regra->anotationClass;
                 $anotationMetodo = $filtroName->regra->anotationMethod;
                 $inClasse = false;
+                $inMethod = false;
                 if ($anotationClasse == '*') {
                     $inClasse = true;
                 } else if ($anotationClasse != '') {
@@ -69,9 +70,9 @@ class Jaspion {
                     $inClasse = in_array($anotationClasse, $arrClas);
                 } if ($anotationMetodo != '') {
                     $arrMet = \jaspion\Util\AnotacaoUtil::gerarArraydeAnotacaoMetodo($controle, $acao);
-                    $inClasse = in_array($anotationMetodo, $arrMet);
+                    $inMethod = in_array($anotationMetodo, $arrMet);
                 }
-                if ($inClasse) {
+                if ($inClasse || $inMethod) {
                     $filtroN = $filtroName->classe;
                     $filtro = new $filtroN();
                     $this->aplicaFiltro($filtro, $controle, $acao, $parametro);
