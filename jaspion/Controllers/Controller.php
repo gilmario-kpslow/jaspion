@@ -65,9 +65,9 @@ class Controller {
 
     public function addScript($script) {
         if ($this->script == '') {
-            $this->script = $this->script . "" . $this->js($script);
+            $this->script = $this->js($script);
         } else {
-            $this->script = $this->script . "\r\v" . $this->js($script);
+            $this->script .= "\r\n" . $this->js($script);
         }
     }
 
@@ -84,10 +84,10 @@ class Controller {
         if (!is_null($use) && !is_null($valor)) {
             $objeto = new $use();
             $this->view->$nome = $objeto->$valor();
-        }else if(!is_null($use) && is_null($valor)){ 
+        } else if (!is_null($use) && is_null($valor)) {
             $objeto = new $use();
             $this->view->$nome = $objeto;
-        }else {
+        } else {
             $this->view->$nome = $valor;
         }
     }

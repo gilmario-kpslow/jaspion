@@ -34,4 +34,14 @@ class JSonUtil {
         return $json;
     }
 
+    public static function criaJSONObjectArray($array) {
+        $json = "{ \"lista\": [";
+        foreach ($array as $value) {
+            $json .= self::criaJSONObject($value) . ",";
+        }
+        $json = substr($json, 0, -1);
+        $json .= "]}";
+        return $json;
+    }
+
 }

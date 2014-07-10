@@ -24,7 +24,6 @@ abstract class DAO {
     public function salvar(Model $object) {
         try {
             $dados = $object->setBanco();
-            $this->db->beginTransaction();
             $campos = implode(',', array_keys($dados));
             $valores = array_values($dados);
             foreach ($valores as $value) {
@@ -38,7 +37,6 @@ abstract class DAO {
             $valor = implode(',', $valor);
 
             $this->db->query("INSERT INTO {$this->table} ({$campos})VALUES({$valor})");
-            $this->db->commit();
         } catch (PDOException $ex) {
             $this->db->rollBack();
             return $ex;
@@ -48,7 +46,6 @@ abstract class DAO {
     public function atualizar(Model $object, $where = null) {
         try {
             $dados = $object->setBanco();
-            $this->db->beginTransaction();
             $where = ($where != null) ? "WHERE {$where}" : "";
             foreach ($dados as $ind => $val) {
                 if (!is_int($val) || !is_double($val) || !is_float($val)) {
@@ -59,7 +56,6 @@ abstract class DAO {
             }
             $campos = implode(', ', $campos);
             $this->db->query("UPDATE {$this->table} SET {$campos} {$where}");
-            $this->db->commit();
         } catch (PDOException $ex) {
             $this->db->rollBack();
             return $ex;
@@ -68,9 +64,7 @@ abstract class DAO {
 
     public function deletar($where) {
         try {
-            $this->db->beginTransaction();
             $this->db->query("DELETE FROM {$this->table} WHERE {$where}");
-            $this->db->commit();
         } catch (PDOException $ex) {
             $this->db->rollBack();
             return $ex;
@@ -81,13 +75,8 @@ abstract class DAO {
         try {
             $where = ($where != null) ? "WHERE {$where}" : "";
             $q = $this->db->query("SELECT * FROM {$this->table} {$where}");
-            $objects = array();
             if ($q) {
-                foreach ($q->fetchAll() as $rs) {
-                    $this->model->popularBanco($rs);
-                    $objects[] = $this->model;
-                }
-                return $objects;
+                return $this->arryToList($q);
             } else {
                 return null;
             }
@@ -95,6 +84,16 @@ abstract class DAO {
             $this->db->rollBack();
             return $ex;
         }
+    }
+
+    protected function arryToList($q) {
+        $objects = array();
+        foreach ($q->fetchAll() as $rs) {
+            $this->model = new $this->model;
+            $this->model->popularBanco($rs);
+            $objects[] = $this->model;
+        }
+        return $objects;
     }
 
     public function carregar($campo, $id) {
@@ -108,10 +107,8 @@ abstract class DAO {
 
     public function consultar($campo, $nome = "") {
         try {
-            $this->db->beginTransaction();
             $query = "SELECT * FROM {$this->table} WHERE {$campo} like '{$nome}%'";
             $row = $this->db->query($query);
-            $this->db->commit();
             $objects = array();
             foreach ($row->fetchAll() as $rs) {
                 $this->model->popularBanco($rs);
@@ -122,7 +119,6 @@ abstract class DAO {
             $this->db->rollBack();
             return $ex;
         }
-        return $return;
     }
 
 }
