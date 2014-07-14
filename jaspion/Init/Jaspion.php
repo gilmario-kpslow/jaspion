@@ -19,7 +19,7 @@ class Jaspion {
         $this->criarFiltros();
         self::$sistema = $parametros->sistema;
         define('DIR_ROOT', self::$sistema->diretorioRaiz);
-        self::$globais = isset(self::$sistema->varGlobais->nome) ? self::$sistema->varGlobais : null;
+        self::$globais = isset(self::$sistema->varGlobais) ? self::$sistema->varGlobais : null;
         $this->run($this->getUrl());
     }
 
