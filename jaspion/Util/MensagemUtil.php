@@ -11,7 +11,7 @@ class MensagemUtil {
 
     private $mensagem;
 
-    public static function __construct() {
+    public function __construct() {
         $fileconfig = file_get_contents("../App/Config/mensagens.json");
         $parametros = json_decode($fileconfig);
         $this->mensagem = $parametros->mensagem->mensagens;
