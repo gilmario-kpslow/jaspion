@@ -46,7 +46,7 @@ class Controller {
     }
 
     public function js($filename) {
-        return '<script src="' . DIR_ROOT . "/resources/js/" . $filename . '.js"" type="text/javascript"></script>';
+        return '<script src="' . DIR_ROOT . '/resources/js/' . $filename . '.js" type="text/javascript"></script>';
     }
 
     public function img($filename) {
