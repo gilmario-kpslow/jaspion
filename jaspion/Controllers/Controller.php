@@ -1,12 +1,8 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 namespace jaspion\Controllers;
+
+use jaspion\Util\MensagemUtil;
 
 /**
  * Description of Action
@@ -19,6 +15,7 @@ class Controller {
     protected $action;
     protected $mobile;
     private $script;
+    private $mensagemService;
 
     function __construct() {
         $this->script = '';
@@ -26,6 +23,7 @@ class Controller {
         $this->getGlobais();
         $this->view->mensagem = "";
         $this->mobile = strstr($_SERVER['HTTP_USER_AGENT'], 'Mobile');
+        $this->mensagemService = new MensagemUtil();
     }
 
     public function render($action, $layout = "layout") {
@@ -97,7 +95,21 @@ class Controller {
      * @param type $men
      * @param type $tipo (def)
      */
-    public function mensagem($men, $tipo = null) {
+//    public function mensagem($men, $tipo = null) {
+//        switch ($tipo) {
+//            case 0:return $this->view->mensagem = "<div id='alerta' class='alert alert-success' style='text-align:center;'><button type='button' class='close' data-dismiss='alert'>×</button><span class='glyphicon glyphicon-exclamation-sign'></span> " . $men . "</div>";
+//            case 1: return $this->view->mensagem = "<div id='alerta' class='alert alert-danger' style='text-align:center;'> <button type='button' class='close' data-dismiss='alert'>×</button><span class='glyphicon glyphicon-remove-sign'></span>  " . $men . "</div>";
+//            case 2:return $this->view->mensagem = "<div id='alerta' class='alert alert-warning' style='text-align:center;'> <button type='button' class='close' data-dismiss='alert'>×</button><span class='glyphicon glyphicon-warning-sign'></span> " . $men . "</div>";
+//            default :return $this->view->mensagem = "<div id='alerta' class='alert alert-info' style='text-align:center;'><button type='button' class='close' data-dismiss='alert'>×</button><span class='glyphicon glyphicon-info-sign'></span> " . $men . "</div>";
+//        }
+//    }
+    /**
+     *
+     * @param type $nome
+     * @param type $tipo (def)
+     */
+    public function mensagemCreate($nome, $tipo = null) {
+        $men = $this->mensagemService->mensagem($nome);
         switch ($tipo) {
             case 0:return $this->view->mensagem = "<div id='alerta' class='alert alert-success' style='text-align:center;'><button type='button' class='close' data-dismiss='alert'>×</button><span class='glyphicon glyphicon-exclamation-sign'></span> " . $men . "</div>";
             case 1: return $this->view->mensagem = "<div id='alerta' class='alert alert-danger' style='text-align:center;'> <button type='button' class='close' data-dismiss='alert'>×</button><span class='glyphicon glyphicon-remove-sign'></span>  " . $men . "</div>";
