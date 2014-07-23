@@ -37,7 +37,7 @@ abstract class DAO {
             }
             $valor = implode(',', $valor);
 
-            $this->db->query("INSERT INTO {$this->table} ({$campos})VALUES({$valor})");
+            return $this->db->query("INSERT INTO {$this->table} ({$campos})VALUES({$valor})");
         } catch (PDOException $ex) {
             $this->db->rollBack();
             return $ex;
@@ -56,7 +56,7 @@ abstract class DAO {
                 $campos[] = "{$ind} = {$val}";
             }
             $campos = implode(', ', $campos);
-            $this->db->query("UPDATE {$this->table} SET {$campos} {$where}");
+            return $this->db->query("UPDATE {$this->table} SET {$campos} {$where}");
         } catch (PDOException $ex) {
             $this->db->rollBack();
             return $ex;
@@ -65,7 +65,7 @@ abstract class DAO {
 
     public function deletar($where) {
         try {
-            $this->db->query("DELETE FROM {$this->table} WHERE {$where}");
+            return $this->db->query("DELETE FROM {$this->table} WHERE {$where}");
         } catch (PDOException $ex) {
             $this->db->rollBack();
             return $ex;
