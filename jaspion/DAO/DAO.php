@@ -16,9 +16,10 @@ abstract class DAO {
     protected $table;
     protected $model;
 
-    function __construct($conexao, Model $object) {
+    function __construct($conexao, Model $object, $table) {
         $this->db = Conexao::getDb($conexao);
         $this->model = $object;
+        $this->table = $table;
     }
 
     public function salvar(Model $object) {
