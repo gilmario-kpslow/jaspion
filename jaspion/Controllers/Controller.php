@@ -38,6 +38,7 @@ class Controller {
     public function content() {
         $atual = get_class($this);
         $singleClassName = strtolower(str_replace("Controller", "", str_replace("App\\Controllers\\", "", $atual)));
+        $singleClassName = str_replace("\\", "/", $singleClassName);
         include_once '../App/Views/' . $singleClassName . "/" . $this->action . '.phtml';
     }
 
