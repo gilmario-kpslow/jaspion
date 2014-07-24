@@ -42,16 +42,58 @@ class Controller {
         include_once '../App/Views/' . $singleClassName . "/" . $this->action . '.phtml';
     }
 
-    public function css($filename) {
-        return '<link href="' . DIR_ROOT . '/resources/css/' . $filename . '.css" rel="stylesheet"/>';
+    /*
+     * implementada para ser usada com 1 ou 2 parametro
+     * caso 1 parametro : adicionar css que esta no resouces/css
+     * caso 2 parametro : adicionar css que esta no na pasta que corresponde ao primero parametro  
+     */
+    public function css() {
+        switch (func_num_args()) {
+            case 2:
+                return '<link href="' . DIR_ROOT . '/resources/' . func_get_arg(0) . '/css/' . func_get_arg(1) . '.css" rel="stylesheet"/>';
+                break;
+
+            default:
+                return '<link href="' . DIR_ROOT . '/resources/css/' . func_get_arg(0) . '.css" rel="stylesheet"/>';
+                break;
+        }
     }
 
-    public function js($filename) {
-        return '<script src="' . DIR_ROOT . '/resources/js/' . $filename . '.js" type="text/javascript"></script>';
+    /*
+     * implementada para ser usada com 1 ou 2 parametro
+     * caso 1 parametro : adicionar js que esta no resouces/js
+     * caso 2 parametro : adicionar js que esta no na pasta que corresponde ao primero parametro  
+     */
+
+    public function js() {
+        switch (func_num_args()) {
+            case 2:
+                return '<script src="' . DIR_ROOT . "/resources/" . func_get_arg(0) . '/js/' . func_get_arg(1) . '.js"" type="text/javascript"></script>';
+                break;
+
+            default:
+                return '<script src="' . DIR_ROOT . "/resources/js/" . func_get_arg(0) . '.js"" type="text/javascript"></script>';
+                break;
+        }
     }
 
-    public function img($filename) {
-        return DIR_ROOT . '/resources/images/' . $filename;
+    /*
+     * implementada para ser usada com 1 ou 2 parametro
+     * caso 1 parametro : adicionar imagem que esta no resouces/images
+     * caso 2 parametro : adicionar imagem que esta no na pasta que corresponde ao primero parametro  
+     */
+
+    public function img() {
+        switch (func_num_args()) {
+            case 2:
+
+                return DIR_ROOT . '/resources/' . func_get_arg(0) . '/images/' . func_get_arg(1);
+                break;
+
+            default:
+                return DIR_ROOT . '/resources/images/' . func_get_arg(0);
+                break;
+        }
     }
 
     public function link($link) {
