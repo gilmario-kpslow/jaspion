@@ -94,9 +94,7 @@ class Jaspion {
     private function executarMetodoController($controle, $acao, $parametro = null) {
         $controller = new $controle();
         if ($parametro !== null) {
-            if (count($parametro) == 1) {
-                $controller->$acao($parametro[0]);
-            }
+            $controller->$acao($parametro);
         } else {
             $controller->$acao();
         }
