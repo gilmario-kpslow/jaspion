@@ -20,7 +20,11 @@ class RegistrySession {
     }
     
     public function __get($name) {
-        return unserialize($_SESSION[$name]);
+        if (isset($_SESSION[$name])) {
+            return unserialize($_SESSION[$name]);
+        } else {
+            return false;
+        }
     }
     
     public function unregisty(){
