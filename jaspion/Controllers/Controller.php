@@ -45,8 +45,9 @@ class Controller {
     /*
      * implementada para ser usada com 1 ou 2 parametro
      * caso 1 parametro : adicionar css que esta no resouces/css
-     * caso 2 parametro : adicionar css que esta no na pasta que corresponde ao primero parametro  
+     * caso 2 parametro : adicionar css que esta no na pasta que corresponde ao primero parametro
      */
+
     public function css() {
         switch (func_num_args()) {
             case 2:
@@ -62,17 +63,17 @@ class Controller {
     /*
      * implementada para ser usada com 1 ou 2 parametro
      * caso 1 parametro : adicionar js que esta no resouces/js
-     * caso 2 parametro : adicionar js que esta no na pasta que corresponde ao primero parametro  
+     * caso 2 parametro : adicionar js que esta no na pasta que corresponde ao primero parametro
      */
 
     public function js() {
         switch (func_num_args()) {
             case 2:
-                return '<script src="' . DIR_ROOT . "/resources/" . func_get_arg(0) . '/js/' . func_get_arg(1) . '.js"" type="text/javascript"></script>';
+                return '<script src="' . DIR_ROOT . '/resources/' . func_get_arg(0) . '/js/' . func_get_arg(1) . '.js" type="text/javascript"></script>';
                 break;
 
             default:
-                return '<script src="' . DIR_ROOT . "/resources/js/" . func_get_arg(0) . '.js"" type="text/javascript"></script>';
+                return '<script src="' . DIR_ROOT . '/resources/js/' . func_get_arg(0) . '.js" type="text/javascript"></script>';
                 break;
         }
     }
@@ -80,7 +81,7 @@ class Controller {
     /*
      * implementada para ser usada com 1 ou 2 parametro
      * caso 1 parametro : adicionar imagem que esta no resouces/images
-     * caso 2 parametro : adicionar imagem que esta no na pasta que corresponde ao primero parametro  
+     * caso 2 parametro : adicionar imagem que esta no na pasta que corresponde ao primero parametro
      */
 
     public function img() {
