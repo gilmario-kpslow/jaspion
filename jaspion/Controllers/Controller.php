@@ -11,9 +11,12 @@ use jaspion\Util\MensagemUtil;
  */
 class Controller {
 
+    /**
+     *
+     * @var Guardar variáveis que vão sobre a pagina
+     */
     protected $view;
     protected $action;
-    protected $mobile;
     private $script;
     private $mensagemService;
 
@@ -22,19 +25,35 @@ class Controller {
         $this->view = new \stdClass();
         $this->getGlobais();
         $this->view->mensagem = "";
-        $this->mobile = strstr($_SERVER['HTTP_USER_AGENT'], 'Mobile');
         $this->mensagemService = new MensagemUtil();
     }
 
+    /**
+     * Renderizar uma página dentro do layout
+     * @param $action
+     * @param $layout
+     */
     public function render($action, $layout = "layout") {
         $this->action = $action;
-        if ($layout && file_exists("../App/Views/" . $layout . ".phtml") && !$this->mobile) {
+        if ($layout && file_exists("../App/Views/" . $layout . ".phtml")) {
             include_once '../App/Views/' . $layout . '.phtml';
         } else {
             $this->content();
         }
     }
 
+    /**
+     * Renderizar uma pagina sem layout
+     * @param $action
+     */
+    public function simpleRender($action) {
+        $this->action = $action;
+        $this->content();
+    }
+
+    /**
+     * Carregar o conteudo da view pela página
+     */
     public function content() {
         $atual = get_class($this);
         $singleClassName = strtolower(str_replace("Controller", "", str_replace("App\\Controllers\\", "", $atual)));
@@ -52,11 +71,8 @@ class Controller {
         switch (func_num_args()) {
             case 2:
                 return '<link href="' . DIR_ROOT . '/resources/' . func_get_arg(0) . '/css/' . func_get_arg(1) . '.css" rel="stylesheet"/>';
-                break;
-
             default:
                 return '<link href="' . DIR_ROOT . '/resources/css/' . func_get_arg(0) . '.css" rel="stylesheet"/>';
-                break;
         }
     }
 
@@ -70,11 +86,8 @@ class Controller {
         switch (func_num_args()) {
             case 2:
                 return '<script src="' . DIR_ROOT . '/resources/' . func_get_arg(0) . '/js/' . func_get_arg(1) . '.js" type="text/javascript"></script>';
-                break;
-
             default:
                 return '<script src="' . DIR_ROOT . '/resources/js/' . func_get_arg(0) . '.js" type="text/javascript"></script>';
-                break;
         }
     }
 
@@ -87,13 +100,9 @@ class Controller {
     public function img() {
         switch (func_num_args()) {
             case 2:
-
                 return DIR_ROOT . '/resources/' . func_get_arg(0) . '/images/' . func_get_arg(1);
-                break;
-
             default:
                 return DIR_ROOT . '/resources/images/' . func_get_arg(0);
-                break;
         }
     }
 

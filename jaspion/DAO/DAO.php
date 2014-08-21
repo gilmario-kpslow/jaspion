@@ -6,13 +6,13 @@ use jaspion\DAO\Conexao;
 use jaspion\Models\Model;
 
 /**
- * Description of DAO
+ *
  *
  * @author gilmario
  */
 abstract class DAO {
 
-    protected $db;
+    private $db;
     protected $table;
     protected $model;
 
@@ -23,68 +23,56 @@ abstract class DAO {
     }
 
     public function salvar(Model $object) {
-        try {
-            $dados = $object->setBanco();
-            $campos = implode(',', array_keys($dados));
-            $valores = array_values($dados);
-            foreach ($valores as $value) {
-                if (is_int($value) || is_double($value) || is_float($value)) {
-                    $valor[] = $value;
-                } else {
-                    $value = str_replace("'", "", $value);
-                    $valor[] = "'" . $value . "'";
-                }
+        $dados = $object->setBanco();
+        $campos = implode(',', array_keys($dados));
+        $valores = array_values($dados);
+        foreach ($valores as $value) {
+            if (is_int($value) || is_double($value) || is_float($value)) {
+                $valor[] = $value;
+            } else {
+                $value = str_replace("'", "", $value);
+                $valor[] = "'" . $value . "'";
             }
-            $valor = implode(',', $valor);
+        }
+        $valor = implode(',', $valor);
+        return $this->executa("INSERT INTO {$this->table} ({$campos})VALUES({$valor})");
+    }
 
-            return $this->db->query("INSERT INTO {$this->table} ({$campos})VALUES({$valor})");
-        } catch (PDOException $ex) {
+    public function executa($sql) {
+        try {
+            $resultado = $this->db->query($sql);
+            if ($resultado) {
+                return $resultado;
+            } else {
+                throw new Exception("Erro de Sql ", 0, null);
+            }
+        } catch (Exception $ex) {
             $this->db->rollBack();
-            return $ex;
+            throw $ex;
         }
     }
 
     public function atualizar(Model $object, $where = null) {
-        try {
-            $dados = $object->setBanco();
-            $where = ($where != null) ? "WHERE {$where}" : "";
-            foreach ($dados as $ind => $val) {
-                if (!is_int($val) || !is_double($val) || !is_float($val)) {
-                    $val = "'" . $val . "'";
-                }
-
-                $campos[] = "{$ind} = {$val}";
+        $dados = $object->setBanco();
+        $where = ($where != null) ? "WHERE {$where}" : "";
+        foreach ($dados as $ind => $val) {
+            if (!is_int($val) || !is_double($val) || !is_float($val)) {
+                $val = "'" . $val . "'";
             }
-            $campos = implode(', ', $campos);
-            return $this->db->query("UPDATE {$this->table} SET {$campos} {$where}");
-        } catch (PDOException $ex) {
-            $this->db->rollBack();
-            return $ex;
+            $campos[] = "{$ind} = {$val}";
         }
+        $campos = implode(', ', $campos);
+        return $this->executa("UPDATE {$this->table} SET {$campos} {$where}");
     }
 
     public function deletar($where) {
-        try {
-            return $this->db->query("DELETE FROM {$this->table} WHERE {$where}");
-        } catch (PDOException $ex) {
-            $this->db->rollBack();
-            return $ex;
-        }
+        return $this->executa("DELETE FROM {$this->table} WHERE {$where}");
     }
 
     public function listar($where = null) {
-        try {
-            $where = ($where != null) ? "WHERE {$where}" : "";
-            $q = $this->db->query("SELECT * FROM {$this->table} {$where}");
-            if ($q) {
-                return $this->arryToList($q);
-            } else {
-                return null;
-            }
-        } catch (PDOException $ex) {
-            $this->db->rollBack();
-            return $ex;
-        }
+        $where = ($where != null) ? "WHERE {$where}" : "";
+        $q = $this->db->query("SELECT * FROM {$this->table} {$where}");
+        return $this->arryToList($q);
     }
 
     protected function arryToList($q) {
@@ -99,7 +87,7 @@ abstract class DAO {
 
     public function carregar($campo, $id) {
         $o = $this->listar("{$campo} = '{$id}'");
-        if ($o) {
+        if (count($o) > 0) {
             return $o[0];
         } else {
             return null;
@@ -107,19 +95,10 @@ abstract class DAO {
     }
 
     public function consultar($campo, $nome = "") {
-        try {
-            $query = "SELECT * FROM {$this->table} WHERE {$campo} like '{$nome}%'";
-            $row = $this->db->query($query);
-            $objects = array();
-            foreach ($row->fetchAll() as $rs) {
-                $this->model->popularBanco($rs);
-                $objects[] = $this->model;
-            }
-            return $objects;
-        } catch (PDOException $ex) {
-            $this->db->rollBack();
-            return $ex;
-        }
+        $query = "SELECT * FROM {$this->table} WHERE {$campo} like '{$nome}%'";
+        $row = $this->executa($query);
+        $objects = $this->arryToList($row);
+        return $objects;
     }
 
 }
