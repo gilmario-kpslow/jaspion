@@ -38,7 +38,7 @@ abstract class DAO {
         return $this->executa("INSERT INTO {$this->table} ({$campos})VALUES({$valor})");
     }
 
-    public function executa($sql) {
+    protected function executa($sql) {
         try {
             $resultado = $this->db->query($sql);
             if ($resultado) {
@@ -99,10 +99,6 @@ abstract class DAO {
         $row = $this->executa($query);
         $objects = $this->arryToList($row);
         return $objects;
-    }
-    
-    protected function getDb(){
-        return $this->db;
     }
 
 }
