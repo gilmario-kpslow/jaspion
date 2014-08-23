@@ -100,5 +100,9 @@ abstract class DAO {
         $objects = $this->arryToList($row);
         return $objects;
     }
+    
+    protected function getDb(){
+        return $this->db;
+    }
 
 }
