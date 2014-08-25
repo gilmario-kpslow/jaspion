@@ -44,12 +44,20 @@ abstract class DAO {
             if ($resultado) {
                 return $resultado;
             } else {
-                throw new \Exception("Erro de Sql " . $this->db->errorInfo(), 0, null);
+                throw new \Exception("Erro de Sql " . $this->geraErro($this->db->errorInfo()), 0, null);
             }
         } catch (\Exception $ex) {
             $this->db->rollBack();
             throw $ex;
         }
+    }
+
+    private function geraErro($array) {
+        $erro = "";
+        foreach ($array as $ex) {
+            $erro .= $ex;
+        }
+        return $erro;
     }
 
     public function atualizar(Model $object, $where = null) {
