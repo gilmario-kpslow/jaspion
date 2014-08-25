@@ -44,9 +44,9 @@ abstract class DAO {
             if ($resultado) {
                 return $resultado;
             } else {
-                throw new Exception("Erro de Sql ", 0, null);
+                throw new \Exception("Erro de Sql " . $this->db->errorInfo(), 0, null);
             }
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
             $this->db->rollBack();
             throw $ex;
         }
