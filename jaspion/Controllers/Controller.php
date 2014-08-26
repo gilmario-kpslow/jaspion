@@ -126,7 +126,7 @@ class Controller {
         $global = \jaspion\Init\Jaspion::getGlobais();
         if (!is_null($global)) {
             foreach ($global as $globais) {
-                $this->criarGlobais($globais->nome, isset($globais->valor) ? $globais->valor : null, $globais->use);
+                $this->criarGlobais($globais->nome, isset($globais->valor) ? $globais->valor : null, isset($globais->use) ? $globais->use : null);
             }
         }
     }
