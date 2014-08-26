@@ -20,6 +20,14 @@ abstract class Model {
         $arrayAnotacoes = AnotacaoUtil::gerarArraydeAnotacaoAtributo($this);
         return $arrayAnotacoes[$atributo]["formName"];
     }
+    
+    /*
+     * Metodo que retorna o valor da anotação @columnDb do atributo informado
+     */
+    public function getBancoName($atributo) {
+        $arrayAnotacoes = AnotacaoUtil::gerarArraydeAnotacaoAtributo($this);
+        return $arrayAnotacoes[$atributo]["columnDb"];
+    }
 
     /*
      * Metodo que gera um array de associativo, tendo como chave o nome da 

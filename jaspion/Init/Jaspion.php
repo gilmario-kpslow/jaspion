@@ -29,8 +29,8 @@ class Jaspion {
 
     protected function run($url) {
         $array = explode("/", $url);
-        $controle = count($array) > 2 ? ($array[2] != '' ? $array[2] : 'index') : "index";
-        $acao = count($array) > 3 ? $array[3] : "index";
+        $controle = count($array) > 2 ? ($array[2] != '' ? $array[2] : 'inicio') : "inicio";
+        $acao = count($array) > 3 ? $array[3] : "inicio";
         $parametro = null;
         if (count($array) > 4) {
             $parametro = $this->carregaParametros($array);
