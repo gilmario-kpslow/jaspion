@@ -92,11 +92,15 @@ class Jaspion {
     }
 
     private function executarMetodoController($controle, $acao, $parametro = null) {
-        $controller = new $controle();
-        if ($parametro !== null) {
-            $controller->$acao($parametro);
-        } else {
-            $controller->$acao();
+        try {
+            $controller = new $controle();
+            if ($parametro !== null) {
+                $controller->$acao($parametro);
+            } else {
+                $controller->$acao();
+            }
+        } catch (Exception $ex) {
+            $this->erro500($ex);
         }
     }
 
@@ -111,6 +115,7 @@ class Jaspion {
         $indexClasse = self::$sistema->baseController->classe;
         $erro500 = self::$sistema->baseController->erro500;
         $index = new $indexClasse();
+        $index->view->ex = $ex;
         $index->$erro500();
     }
 

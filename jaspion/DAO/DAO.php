@@ -79,7 +79,7 @@ abstract class DAO {
 
     public function listar($where = null) {
         $where = ($where != null) ? "WHERE {$where}" : "";
-        $q = $this->db->query("SELECT * FROM {$this->table} {$where}");
+        $q = $this->executa("SELECT * FROM {$this->table} {$where}");
         return $this->arryToList($q);
     }
 
@@ -100,13 +100,6 @@ abstract class DAO {
         } else {
             return null;
         }
-    }
-
-    public function consultar($campo, $nome = "") {
-        $query = "SELECT * FROM {$this->table} WHERE {$campo} like '{$nome}%'";
-        $row = $this->executa($query);
-        $objects = $this->arryToList($row);
-        return $objects;
     }
 
 }
