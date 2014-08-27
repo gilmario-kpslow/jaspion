@@ -99,7 +99,7 @@ class Jaspion {
             } else {
                 $controller->$acao();
             }
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
             $this->erro500($ex);
         }
     }
@@ -115,8 +115,7 @@ class Jaspion {
         $indexClasse = self::$sistema->baseController->classe;
         $erro500 = self::$sistema->baseController->erro500;
         $index = new $indexClasse();
-        $index->view->ex = $ex;
-        $index->$erro500();
+        $index->$erro500($ex);
     }
 
     public static function getSistema() {
