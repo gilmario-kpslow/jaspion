@@ -30,4 +30,8 @@ class RegistrySession {
     public function unregisty(){
         session_destroy();
     }
+    
+    public function unSetRegistry($name){
+        unset($_SESSION[$name]);
+    }
 }
