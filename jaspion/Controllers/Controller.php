@@ -116,7 +116,7 @@ class Controller {
         echo $this->script;
     }
 
-    public function cssBloco() {
+    public function cssBlock() {
         echo $this->_css;
     }
 
@@ -197,30 +197,30 @@ class Controller {
             default :return $this->view->mensagem = "<div id='alerta' class='alert alert-info' style='text-align:center;'><button type='button' class='close' data-dismiss='alert'>×</button><span class='glyphicon glyphicon-info-sign'></span> " . $men . "</div>";
         }
     }
-    
+
     public function mensagemSessao() {
         $session = new \jaspion\Util\RegistrySession();
-        if($session->success){
+        if ($session->success) {
             $this->view->mensagem = "<div id='alerta' class='alert alert-success' style='text-align:center;'><button type='button' class='close' data-dismiss='alert'>×</button><span class='glyphicon glyphicon-exclamation-sign'></span> " . $session->success . "</div>";
             $session->unSetRegistry('success');
         }
-        
-        if($session->danger){
+
+        if ($session->danger) {
             $this->view->mensagem = "<div id='alerta' class='alert alert-danger' style='text-align:center;'> <button type='button' class='close' data-dismiss='alert'>×</button><span class='glyphicon glyphicon-remove-sign'></span>  " . $session->danger . "</div>";
             $session->unSetRegistry('danger');
         }
-        
-        if($session->warning){
+
+        if ($session->warning) {
             $this->view->mensagem = "<div id='alerta' class='alert alert-warning' style='text-align:center;'> <button type='button' class='close' data-dismiss='alert'>×</button><span class='glyphicon glyphicon-warning-sign'></span> " . $session->warning . "</div>";
             $session->unSetRegistry('warning');
         }
-        if($session->info){
+        if ($session->info) {
             $this->view->mensagem = "<div id='alerta' class='alert alert-info' style='text-align:center;'><button type='button' class='close' data-dismiss='alert'>×</button><span class='glyphicon glyphicon-info-sign'></span> " . $session->info . "</div>";
             $session->unSetRegistry('info');
         }
     }
-    
-    public function mensagemCreateSessao($men ,$tipo = null) {
+
+    public function mensagemCreateSessao($men, $tipo = null) {
         $session = new \jaspion\Util\RegistrySession();
         switch ($tipo) {
             case 0:return $session->success = $men;
