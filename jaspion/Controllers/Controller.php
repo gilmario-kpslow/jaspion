@@ -18,6 +18,7 @@ class Controller {
     protected $view;
     protected $action;
     private $script;
+    private $_css;
     private $mensagemService;
 
     function __construct() {
@@ -114,11 +115,35 @@ class Controller {
         echo $this->script;
     }
 
+    public function cssBloco() {
+        echo $this->_css;
+    }
+
     public function addScript($script) {
         if ($this->script == '') {
             $this->script = $this->js($script);
         } else {
             $this->script .= "\r\n" . $this->js($script);
+        }
+    }
+
+    public function addAdd($css) {
+        switch (func_num_args()) {
+            case 2:
+                if ($this->_css == '') {
+                    $this->_css = $this->css(func_get_arg(0), func_get_arg(1));
+                } else {
+                    $this->_css .= "\r\n" . $this->css(func_get_arg(0), func_get_arg(1));
+                }
+                break;
+
+            default :
+                if ($this->_css == '') {
+                    $this->_css = $this->css(func_get_arg(0));
+                } else {
+                    $this->_css .= "\r\n" . $this->css(func_get_arg(0));
+                }
+                break;
         }
     }
 
