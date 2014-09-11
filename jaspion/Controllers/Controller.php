@@ -108,6 +108,15 @@ class Controller {
         }
     }
 
+    public function download() {
+        switch (func_num_args()) {
+            case 2:
+                return DIR_ROOT . '/resources/' . func_get_arg(0) . '/downloads/' . func_get_arg(1);
+            default:
+                return DIR_ROOT . '/resources/downloads/' . func_get_arg(0);
+        }
+    }
+
     public function link($link) {
         return DIR_ROOT . $link;
     }
