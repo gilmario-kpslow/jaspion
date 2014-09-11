@@ -44,10 +44,10 @@ abstract class Model {
         $arrayAnotacoes = AnotacaoUtil::gerarArraydeAnotacaoAtributo($this);
         if (!is_null($arrayAnotacoes)) {
             foreach ($arrayAnotacoes as $campo => $anotacoes) {
-                foreach ($anotacoes as $anotacao => $valor) {
-                    if ($anotacao == 'columnDb') {
-                        $dados[$valor] = $this->$campo;
-                    }
+                $valor = $anotacoes['columnDb'];
+                if (!is_null($valor)) {
+                    $get = 'get' . ucfirst($campo);
+                    $dados[$valor] = $this->$get();
                 }
             }
             return array_filter($dados);

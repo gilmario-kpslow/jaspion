@@ -17,9 +17,12 @@ namespace jaspion\Util;
 class Converter {
 
     public static function stringParaDouble($valor) {
+        if ($valor == '') {
+            $valor = 0;
+        }
         $valor = str_replace(".", "", $valor);
         $valor = str_replace(",", ".", $valor);
-        return floatval($valor);
+        return number_format($valor, 2, '.', '');
     }
 
     public static function stringParaInteger($valor) {
