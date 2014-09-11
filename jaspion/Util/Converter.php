@@ -33,14 +33,22 @@ class Converter {
 
     public static function stringParaData($data) {
         //dd/mm/yyyy
-        $dataarray = explode("/", $data);
-        return $dataarray[2] . "-" . $dataarray[1] . "-" . $dataarray[0];
+        if (strlen($data) >= 10) {
+            $dataarray = explode("/", $data);
+            return $dataarray[2] . "-" . $dataarray[1] . "-" . $dataarray[0];
+        } else {
+            return null;
+        }
     }
 
     public static function stringParaDataTime($data) {
         //dd/mm/yyyy hh:mm:ss
-        $dataarray = explode(" ", $data);
-        return $this->stringParaData($dataarray[0]) . " " . $dataarray[1];
+        if (strlen($data) >= 16) {
+            $dataarray = explode(" ", $data);
+            return $this->stringParaData($dataarray[0]) . " " . $dataarray[1];
+        } else {
+            return null;
+        }
     }
 
 }
