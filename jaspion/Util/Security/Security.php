@@ -19,6 +19,7 @@ class Security {
     private $parametros;
     private static $session;
     private static $security;
+    private static $user_name;
 
     public function __construct() {
         if (file_exists("../App/Config/security.json")) {
@@ -35,8 +36,10 @@ class Security {
         $this->userProvider = new $pdoClass();
         $user = $this->userProvider->getUser($username, $password);
         if (is_object($user)) {
-            $this->getSession()->user_token = $user->getToken();
-            $this->getSession()->user = $user;
+            $user_token = $this->parametros->security->user_token;
+            $user_name = $this->parametros->security->user;
+            $this->getSession()->$user_token = $user->getToken();
+            $this->getSession()->$user_name = $user;
             return true;
         } else {
             return false;
@@ -44,12 +47,15 @@ class Security {
     }
 
     public function getUser() {
-        return $this->isUser() ? $this->getSession()->user : false;
+        $user_name = $this->parametros->security->user;
+        return $this->isUser() ? $this->getSession()->$user_name : false;
     }
 
     public function alterUser($user) {
-        $this->getSession()->user_token = $user->getToken();
-        $this->getSession()->user = $user;
+        $user_token = $this->parametros->security->user_token;
+        $user_name = $this->parametros->security->user;
+        $this->getSession()->$user_token = $user->getToken();
+        $this->getSession()->$user_name = $user;
     }
 
     public function isGranted($role) {
@@ -62,8 +68,10 @@ class Security {
     }
 
     public function isUser() {
-        $user = $this->getSession()->user;
-        return $user ? ($this->getSession()->user_token == $user->getToken()) : false;
+        $user_token = $this->parametros->security->user_token;
+        $user_name = $this->parametros->security->user;
+        $user = $this->getSession()->$user_name;
+        return $user ? ($this->getSession()->$user_token == $user->getToken()) : false;
     }
 
     public function getSession() {
