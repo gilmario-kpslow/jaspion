@@ -45,7 +45,7 @@ class Converter {
         //dd/mm/yyyy hh:mm:ss
         if (strlen($data) >= 16) {
             $dataarray = explode(" ", $data);
-            return $this->stringParaData($dataarray[0]) . " " . $dataarray[1];
+            return Converter::stringParaData($dataarray[0]) . " " . $dataarray[1];
         } else {
             return null;
         }
