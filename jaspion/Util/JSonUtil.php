@@ -11,15 +11,20 @@ use ReflectionClass;
  */
 class JSonUtil {
 
-    public static function criaJson($nome, $valor) {
+    public static function criaJson($valor, $nome = "lista") {
         $json = "{";
         if (is_object($valor)) {
             $json .= "\"{$nome}\" : " . JSonUtil::criaJSONObject($valor);
         } elseif (is_array($valor)) {
-            $json .= "\"{$nome}\" : " . JSonUtil::criaJSONArray($valor);
+            if (is_null($nome)) {
+                $json .= JSonUtil::criaJSONArray($valor) . ",";
+            } else {
+                $json .= "\"{$nome}\" : " . JSonUtil::criaJSONArray($valor) . ",";
+            }
         } else {
-            $json .= JSonUtil::criaJSONvariavel($nome, $valor);
+            $json .= JSonUtil::criaJSONvariavel($nome, $valor) . ",";
         }
+        $json = substr($json, 0, -1);
         $json .= "}";
         return $json;
     }
@@ -38,8 +43,14 @@ class JSonUtil {
 
     public static function criaJSONArray($array) {
         $json = "[";
-        foreach ($array as $key => $value) {
-            $json .= JSonUtil::criaJson($key, $value) . ",";
+        foreach ($array as $value) {
+            if (is_array($value)) {
+                $json .= JSonUtil::criaJSONArray($value) . ",";
+            } elseif (is_object($value)) {
+                $json .= JSonUtil::criaJSONObject($value) . ",";
+            } else {
+                $json .= "" . $value . ",";
+            }
         }
         $json = substr($json, 0, -1);
         $json .= "]";
