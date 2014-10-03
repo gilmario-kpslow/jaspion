@@ -28,9 +28,7 @@ class JSonUtil {
             $get = "get" . ucfirst($atributos->name);
             $json .= JSonUtil::criaJSONvariavel($atributos->name, $object->$get()) . ",";
         }
-        $json = substr($json, 0, -1);
-        $json .= "}";
-        return $json;
+        return substr($json, 0, -1) . "}";
     }
 
     private static function criaJSONArray($array) {
@@ -44,9 +42,7 @@ class JSonUtil {
                 $json .= $value . ",";
             }
         }
-        $json = substr($json, 0, -1);
-        $json .= "]";
-        return $json;
+        return substr($json, 0, -1) . "]";
     }
 
     private static function criaJSONvariavel($nome, $valor) {

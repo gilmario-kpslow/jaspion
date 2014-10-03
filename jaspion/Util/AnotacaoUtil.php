@@ -23,7 +23,7 @@ class AnotacaoUtil {
     public static function gerarArraydeAnotacaoAtributo($object) {
         $anotacoes = array();
         try {
-            $reflection = new ReflectionClass(get_class($object));
+            $reflection = new ReflectionClass($object);
             foreach ($reflection->getProperties() as $atributos) {
                 $prop = new ReflectionProperty($reflection->getName(), $atributos->getName());
                 $comment = $prop->getDocComment();

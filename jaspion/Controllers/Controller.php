@@ -59,8 +59,8 @@ class Controller {
     public function content() {
         $atual = get_class($this);
         $singleClassName = strtolower(str_replace("Controller", "", str_replace("App\\Controllers\\", "", $atual)));
-        $singleClassName = str_replace("\\", "/", $singleClassName);
-        include_once '../App/Views/' . $singleClassName . "/" . $this->action . '.phtml';
+        $className = str_replace("\\", "/", $singleClassName);
+        include_once '../App/Views/' . $className . "/" . $this->action . '.phtml';
     }
 
     /*
@@ -69,13 +69,8 @@ class Controller {
      * caso 2 parametro : adicionar css que esta no na pasta que corresponde ao primero parametro
      */
 
-    public function css() {
-        switch (func_num_args()) {
-            case 2:
-                return '<link href="' . DIR_ROOT . '/resources/' . func_get_arg(0) . '/css/' . func_get_arg(1) . '.css" rel="stylesheet"/>';
-            default:
-                return '<link href="' . DIR_ROOT . '/resources/css/' . func_get_arg(0) . '.css" rel="stylesheet"/>';
-        }
+    public function css($source, $modulo = "") {
+        return '<link href="' . DIR_ROOT . '/resources/' . $modulo . 'css/' . $source . '.css" rel="stylesheet"/>';
     }
 
     /*
@@ -84,13 +79,8 @@ class Controller {
      * caso 2 parametro : adicionar js que esta no na pasta que corresponde ao primero parametro
      */
 
-    public function js() {
-        switch (func_num_args()) {
-            case 2:
-                return '<script src="' . DIR_ROOT . '/resources/' . func_get_arg(0) . '/js/' . func_get_arg(1) . '.js" type="text/javascript"></script>';
-            default:
-                return '<script src="' . DIR_ROOT . '/resources/js/' . func_get_arg(0) . '.js" type="text/javascript"></script>';
-        }
+    public function js($source, $modulo = "") {
+        return '<script src="' . DIR_ROOT . '/resources/' . $modulo . 'js/' . $source . '.js" type="text/javascript"></script>';
     }
 
     /*
@@ -99,22 +89,12 @@ class Controller {
      * caso 2 parametro : adicionar imagem que esta no na pasta que corresponde ao primero parametro
      */
 
-    public function img() {
-        switch (func_num_args()) {
-            case 2:
-                return DIR_ROOT . '/resources/' . func_get_arg(0) . '/images/' . func_get_arg(1);
-            default:
-                return DIR_ROOT . '/resources/images/' . func_get_arg(0);
-        }
+    public function img($source, $modulo = "") {
+        return DIR_ROOT . '/resources/' . $modulo . 'images/' . $source;
     }
 
-    public function download() {
-        switch (func_num_args()) {
-            case 2:
-                return DIR_ROOT . '/resources/' . func_get_arg(0) . '/downloads/' . func_get_arg(1);
-            default:
-                return DIR_ROOT . '/resources/downloads/' . func_get_arg(0);
-        }
+    public function download($source, $modulo) {
+        return DIR_ROOT . '/resources/' . $modulo . 'downloads/' . $source;
     }
 
     public function link($link) {
@@ -129,32 +109,12 @@ class Controller {
         echo $this->_css;
     }
 
-    public function addScript($script) {
-        if ($this->script == '') {
-            $this->script = $this->js($script);
-        } else {
-            $this->script .= "\r\n" . $this->js($script);
-        }
+    public function addScript($source, $modulo = "") {
+        $this->script .= $this->js($source, $modulo) . "\r\n";
     }
 
-    public function addAdd($css) {
-        switch (func_num_args()) {
-            case 2:
-                if ($this->_css == '') {
-                    $this->_css = $this->css(func_get_arg(0), func_get_arg(1));
-                } else {
-                    $this->_css .= "\r\n" . $this->css(func_get_arg(0), func_get_arg(1));
-                }
-                break;
-
-            default :
-                if ($this->_css == '') {
-                    $this->_css = $this->css(func_get_arg(0));
-                } else {
-                    $this->_css .= "\r\n" . $this->css(func_get_arg(0));
-                }
-                break;
-        }
+    public function addCss($source, $modulo = "") {
+        $this->_css .= $this->css($source, $modulo) . "\r\n";
     }
 
     public function getGlobais() {
@@ -186,7 +146,7 @@ class Controller {
     public function mensagem($men, $tipo = null) {
         switch ($tipo) {
             case 0:return $this->view->mensagem = "<div id='alerta' class='alert alert-success' style='text-align:center;'><button type='button' class='close' data-dismiss='alert'>×</button><span class='glyphicon glyphicon-exclamation-sign'></span> " . $men . "</div>";
-            case 1: return $this->view->mensagem = "<div id='alerta' class='alert alert-danger' style='text-align:center;'> <button type='button' class='close' data-dismiss='alert'>×</button><span class='glyphicon glyphicon-remove-sign'></span>  " . $men . "</div>";
+            case 1: return $this->view->mensagem = "<div id='alerta' class='alert alert-danger' style='text-align:center;'> <button type='button' class='close' data-dismiss='alert'>×</button><span class='glyphicon glyphicon-remove-sign'></span> " . $men . "</div>";
             case 2:return $this->view->mensagem = "<div id='alerta' class='alert alert-warning' style='text-align:center;'> <button type='button' class='close' data-dismiss='alert'>×</button><span class='glyphicon glyphicon-warning-sign'></span> " . $men . "</div>";
             default :return $this->view->mensagem = "<div id='alerta' class='alert alert-info' style='text-align:center;'><button type='button' class='close' data-dismiss='alert'>×</button><span class='glyphicon glyphicon-info-sign'></span> " . $men . "</div>";
         }
@@ -201,7 +161,7 @@ class Controller {
         $men = $this->mensagemService->mensagem($nome);
         switch ($tipo) {
             case 0:return $this->view->mensagem = "<div id='alerta' class='alert alert-success' style='text-align:center;'><button type='button' class='close' data-dismiss='alert'>×</button><span class='glyphicon glyphicon-exclamation-sign'></span> " . $men . "</div>";
-            case 1: return $this->view->mensagem = "<div id='alerta' class='alert alert-danger' style='text-align:center;'> <button type='button' class='close' data-dismiss='alert'>×</button><span class='glyphicon glyphicon-remove-sign'></span>  " . $men . "</div>";
+            case 1: return $this->view->mensagem = "<div id='alerta' class='alert alert-danger' style='text-align:center;'> <button type='button' class='close' data-dismiss='alert'>×</button><span class='glyphicon glyphicon-remove-sign'></span> " . $men . "</div>";
             case 2:return $this->view->mensagem = "<div id='alerta' class='alert alert-warning' style='text-align:center;'> <button type='button' class='close' data-dismiss='alert'>×</button><span class='glyphicon glyphicon-warning-sign'></span> " . $men . "</div>";
             default :return $this->view->mensagem = "<div id='alerta' class='alert alert-info' style='text-align:center;'><button type='button' class='close' data-dismiss='alert'>×</button><span class='glyphicon glyphicon-info-sign'></span> " . $men . "</div>";
         }
@@ -213,12 +173,10 @@ class Controller {
             $this->view->mensagem = "<div id='alerta' class='alert alert-success' style='text-align:center;'><button type='button' class='close' data-dismiss='alert'>×</button><span class='glyphicon glyphicon-exclamation-sign'></span> " . $session->success . "</div>";
             $session->unSetRegistry('success');
         }
-
         if ($session->danger) {
-            $this->view->mensagem = "<div id='alerta' class='alert alert-danger' style='text-align:center;'> <button type='button' class='close' data-dismiss='alert'>×</button><span class='glyphicon glyphicon-remove-sign'></span>  " . $session->danger . "</div>";
+            $this->view->mensagem = "<div id='alerta' class='alert alert-danger' style='text-align:center;'> <button type='button' class='close' data-dismiss='alert'>×</button><span class='glyphicon glyphicon-remove-sign'></span> " . $session->danger . "</div>";
             $session->unSetRegistry('danger');
         }
-
         if ($session->warning) {
             $this->view->mensagem = "<div id='alerta' class='alert alert-warning' style='text-align:center;'> <button type='button' class='close' data-dismiss='alert'>×</button><span class='glyphicon glyphicon-warning-sign'></span> " . $session->warning . "</div>";
             $session->unSetRegistry('warning');
@@ -236,6 +194,22 @@ class Controller {
             case 1: return $session->danger = $men;
             case 2:return $session->warning = $men;
             default :return $session->info = $men;
+        }
+    }
+
+    /**
+     * Escreve um valor na tela caso o valor exista
+     * a partir da propriedade view
+     */
+    public function escreve($valor, $metodo = null) {
+        if (isset($this->view->$valor)) {
+            if (is_null($metodo)) {
+                return $this->view->$valor;
+            } else {
+                return $this->view->$valor->$metodo();
+            }
+        } else {
+            return "";
         }
     }
 
