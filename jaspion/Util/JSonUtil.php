@@ -11,25 +11,17 @@ use ReflectionClass;
  */
 class JSonUtil {
 
-    public static function criaJson($valor, $nome = "lista") {
-        $json = "{";
+    public static function criaJson($valor, $nome = "valor") {
         if (is_object($valor)) {
-            $json .= "\"{$nome}\" : " . JSonUtil::criaJSONObject($valor);
+            return JSonUtil::criaJSONObject($valor);
         } elseif (is_array($valor)) {
-            if (is_null($nome)) {
-                $json .= JSonUtil::criaJSONArray($valor) . ",";
-            } else {
-                $json .= "\"{$nome}\" : " . JSonUtil::criaJSONArray($valor) . ",";
-            }
+            return JSonUtil::criaJSONArray($valor);
         } else {
-            $json .= JSonUtil::criaJSONvariavel($nome, $valor) . ",";
+            return "{\"{$nome}\":\"{$valor}\"}";
         }
-        $json = substr($json, 0, -1);
-        $json .= "}";
-        return $json;
     }
 
-    public static function criaJSONObject($object) {
+    private static function criaJSONObject($object) {
         $json = "{";
         $reflection = new ReflectionClass(get_class($object));
         foreach ($reflection->getProperties() as $atributos) {
@@ -41,7 +33,7 @@ class JSonUtil {
         return $json;
     }
 
-    public static function criaJSONArray($array) {
+    private static function criaJSONArray($array) {
         $json = "[";
         foreach ($array as $value) {
             if (is_array($value)) {
@@ -49,7 +41,7 @@ class JSonUtil {
             } elseif (is_object($value)) {
                 $json .= JSonUtil::criaJSONObject($value) . ",";
             } else {
-                $json .= "" . $value . ",";
+                $json .= $value . ",";
             }
         }
         $json = substr($json, 0, -1);
@@ -58,7 +50,13 @@ class JSonUtil {
     }
 
     private static function criaJSONvariavel($nome, $valor) {
-        return "\"{$nome}\" : \"{$valor}\"";
+        if (is_array($valor)) {
+            return "\"{$nome}\" : " . JSonUtil::criaJSONArray($valor);
+        } else if (is_object($valor)) {
+            return "\"{$nome}\" : " . JSonUtil::criaJSONObject($valor);
+        } else {
+            return "\"{$nome}\" : \"{$valor}\"";
+        }
     }
 
 }
