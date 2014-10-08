@@ -52,6 +52,14 @@ class Controller {
         $this->action = $action;
         $this->content();
     }
+    
+    /**
+     * Renderizar uma parte qualquer
+     * @param $parte
+     */
+    public function parteRender($parte) {
+        include_once '../App/Views/' . $parte . '.phtml';
+    }
 
     /**
      * Carregar o conteudo da view pela página
