@@ -56,12 +56,23 @@ abstract class ModelContainer {
      */
 
     public function popularBanco(Array $dados) {
+        return $this->popularEntidade($dados, "columnDb");
+    }
+
+    /**
+     *
+     * @param array $dados
+     * @param type $anotacao
+     * @return type Receber um arrayio de dados e popular a entidade
+     */
+    private function popularEntidade(Array $dados, $anotacao) {
         $entidade = new $this->modelo();
         foreach ($this->arrayAnotacoes as $campo => $anotacoes) {
-            $valor = $anotacoes['columnDb'];
+            $valor = (key_exists($anotacao, $anotacoes) ? $anotacoes[$anotacao] : "");
+            $tipo = (key_exists('tipo', $anotacoes) ? $anotacoes['tipo'] : "");
             if (!is_null($valor) && key_exists($valor, $dados)) {
                 $set = 'set' . ucfirst($campo);
-                $entidade->$set($dados[$valor]);
+                $entidade->$set($this->resolveTipo($tipo, $dados[$valor]));
             }
         }
         return $entidade;
@@ -73,46 +84,23 @@ abstract class ModelContainer {
      */
 
     public function popularForm(Array $dados) {
-        $entidade = new $this->modelo();
-        foreach ($this->arrayAnotacoes as $campo => $anotacoes) {
-            $valor = (key_exists('formName', $anotacoes) ? $anotacoes['formName'] : "");
-            $tipo = (key_exists('tipo', $anotacoes) ? $anotacoes['tipo'] : "");
-            $entidade = $this->resolveTipo($entidade, $campo, $tipo, $dados, $valor);
-        }
-        return $entidade;
+        return $this->popularEntidade($dados, "formName");
     }
 
-    /**
-     * Resolver o tipo de valor passado para a entidade
-     *
-     * @param  $entidade
-     * @param  $campo
-     * @param  $tipo
-     * @param  $dados
-     * @param  $valor
-     * @return
-     */
-    private function resolveTipo($entidade, $campo, $tipo, $dados, $valor) {
-        if (!is_null($valor) && key_exists($valor, $dados)) {
-            $set = 'set' . ucfirst($campo);
-            switch ($tipo) {
-                case 'int' :
-                    $entidade->$set(\jaspion\Util\Converter::stringParaInteger($dados[$valor]));
-                    break;
-                case 'float':
-                    $entidade->$set(\jaspion\Util\Converter::stringParaDouble($dados[$valor]));
-                    break;
-                case 'date':
-                    $entidade->$set(\jaspion\Util\Converter::stringParaData($dados[$valor]));
-                    break;
-                case 'datetime':
-                    $entidade->$set(\jaspion\Util\Converter::stringParaDataTime($dados[$valor]));
-                    break;
-                default :$entidade->$set($dados[$valor]);
-                    break;
-            }
+    private function resolveTipo($tipo, $valor) {
+        switch ($tipo) {
+            case 'int' :
+                return\jaspion\Util\Converter::stringParaInteger($valor);
+            case 'float':
+                return \jaspion\Util\Converter::stringParaDouble($valor);
+            case 'boolean':
+                return boolval($valor);
+            case 'date':
+                return \jaspion\Util\Converter::stringParaData($valor);
+            case 'datetime':
+                return \jaspion\Util\Converter::stringParaDataTime($valor);
+            default :return $valor;
         }
-        return $entidade;
     }
 
 }
