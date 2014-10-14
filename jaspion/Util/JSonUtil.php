@@ -39,7 +39,7 @@ class JSonUtil {
             } elseif (is_object($value)) {
                 $json .= JSonUtil::criaJSONObject($value) . ",";
             } else {
-                $json .= $value . ",";
+                $json .= "\"$value\"" . ",";
             }
         }
         return substr($json, 0, -1) . "]";
