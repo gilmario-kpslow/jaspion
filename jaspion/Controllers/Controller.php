@@ -238,5 +238,29 @@ class Controller {
             default :return $session->info = $men;
         }
     }
+    
+    /**
+     * Tratar parametros enviados via post
+     * @param type $nomeParametro
+     */
+    protected function post($nomeParametro) {
+        if (isset($_POST[$nomeParametro])) {
+            return $_POST[$nomeParametro];
+        } else {
+            throw new \Exception("Parametro " . $nomeParametro . " não encontrado");
+        }
+    }
+
+    /**
+     * Tratar parametros enviados via post
+     * @param type $nomeParametro
+     */
+    protected function get($nomeParametro) {
+        if (isset($_POST[$nomeParametro])) {
+            return $_POST[$nomeParametro];
+        } else {
+            throw new \Exception("Parametro " . $nomeParametro . " não encontrado");
+        }
+    }
 
 }
