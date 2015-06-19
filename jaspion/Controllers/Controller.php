@@ -262,5 +262,9 @@ class Controller {
             throw new \Exception("Parametro " . $nomeParametro . " não encontrado");
         }
     }
+    
+    public function redirecionar($local = ""){
+        header("Location:" . DIR_ROOT.$local);
+    } 
 
 }
