@@ -2,78 +2,74 @@
 
 namespace jaspion\DAO;
 
+use jaspion\DAO\WhereCriteria;
+
 /**
- * Description of WhereCriteria
+ * Description of WhereCriteriaBuider
  *
  * @author allan
  */
-class WhereCriteria {
+class WhereCriteriaBuider {
 
-    const IGUAL = "=";
-    const DIFERENTE = "<>";
-    const MAIOR = ">";
-    const MENOR = "<";
-    const MAIORIGUAL = ">=";
-    const MENORIGUAL = "<=";
-    const IS_NULL = "IS NULL";
-    const IS_NOT_NULL = "IS NOT NULL";
-    const LIKE = "LIKE";
-
-    private $sql;
+    private $and;
+    private $or;
     private $parametro;
 
-    private function __construct($campo, $operador, $valor = null) {
-        if (is_null($valor)) {
-            $this->sql = $campo . " " . $operador;
-        } else {
-            $parametroCampo = ":" . strtolower($campo);
-            $this->sql = $campo . " " . $operador . " " . $parametroCampo;
-            $this->parametro = array($parametroCampo => $valor);
+    public function __construct() {
+        $this->and = array();
+        $this->or = array();
+        $this->parametro = array();
+    }
+
+    public function addAnd(WhereCriteria $criteria) {
+        $this->adicionaParametro($this->and, $criteria);
+        return $this;
+    }
+
+    public function addOr(WhereCriteria $criteria) {
+        $this->adicionaParametro($this->or, $criteria);
+        return $this;
+    }
+
+    private function adicionaParametro(&$condicoes, WhereCriteria $criteria) {
+        $condicoes[] = $criteria->getSql();
+        if (!is_null($criteria->getParametro())) {
+            foreach ($criteria->getParametro() as $key => $value) {
+                $this->parametro[$key] = $value;
+            }
         }
     }
 
-    function getSql() {
-        return $this->sql;
+    public function getStringWhere() {
+        if (!empty($this->and) || !empty($this->or)) {
+            $sql = " WHERE ";
+            if (!empty($this->and)) {
+                $sql .= $this->getAnd();
+                if (!empty($this->or)) {
+                    $sql .= " AND (";
+                    $sql .= $this->getOr();
+                    $sql .= ")";
+                }
+            } else {
+                if (!empty($this->or)) {
+                    $sql .= $this->getOr();
+                }
+            }
+            return $sql;
+        }
+        return "";
     }
 
-    function getParametro() {
+    public function getParametrosWhere() {
         return $this->parametro;
     }
 
-    public static function addIgual($campo, $valor) {
-        return new WhereCriteria($campo, self::IGUAL, $valor);
+    private function getAnd() {
+        return implode(" AND ", $this->and);
     }
 
-    public static function addMaiorQue($campo, $valor) {
-        return new WhereCriteria($campo, self::MAIOR, $valor);
-    }
-
-    public static function addMenorQue($campo, $valor) {
-        return new WhereCriteria($campo, self::MENOR, $valor);
-    }
-
-    public static function addMaiorIgual($campo, $valor) {
-        return new WhereCriteria($campo, self::MAIORIGUAL, $valor);
-    }
-
-    public static function addMenorIgual($campo, $valor) {
-        return new WhereCriteria($campo, self::MENORIGUAL, $valor);
-    }
-
-    public static function addIsNull($campo, $valor) {
-        return new WhereCriteria($campo, self::IS_NULL, null);
-    }
-
-    public static function addIsNotNull($campo, $valor) {
-        return new WhereCriteria($campo, self::IS_NOT_NULL, null);
-    }
-
-    public static function addDiferente($campo, $valor) {
-        return new WhereCriteria($campo, self::DIFERENTE, $valor);
-    }
-
-    public static function addLike($campo, $valor) {
-        return new WhereCriteria($campo, self::LIKE, $valor);
+    private function getOr() {
+        return implode(" OR ", $this->or);
     }
 
 }
