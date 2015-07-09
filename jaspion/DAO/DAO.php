@@ -41,16 +41,11 @@ abstract class DAO {
     }
 
     protected function executa($sql) {
-        try {
-            $resultado = $this->db->query($sql);
-            if ($resultado) {
-                return $resultado;
-            } else {
-                throw new \Exception("Erro de Sql " . $this->geraErro($this->db->errorInfo()), 0, null);
-            }
-        } catch (\Exception $ex) {
-            $this->db->rollBack();
-            throw $ex;
+        $resultado = $this->db->query($sql);
+        if ($resultado) {
+            return $resultado;
+        } else {
+            throw new \Exception("Erro de Sql " . $this->geraErro($this->db->errorInfo()), 0, null);
         }
     }
 
@@ -67,9 +62,6 @@ abstract class DAO {
         $parametro = array();
 
         foreach ($dados as $ind => $val) {
-            if (!is_int($val) || !is_double($val) || !is_float($val)) {
-                $val = "'" . $val . "'";
-            }
             $campos[] = "{$ind} = ?";
             $parametro[] = $val;
         }
@@ -81,17 +73,31 @@ abstract class DAO {
         }
         $condicao = implode(" AND ", $condicao);
         $upd = $this->db->prepare("UPDATE {$this->table} SET {$campos} WHERE {$condicao}");
-        $result = $upd->execute($parametro);
+        for ($i = 0; $i < count($parametro); $i++) {
+            $upd->bindValue($i + 1, $parametro[$i]);
+        }
+        $result = $upd->execute();
         if (!$result) {
             throw new \Exception("Erro de Sql " . $this->geraErro($this->db->errorInfo()), 0, null);
         }
     }
 
-    public function deletar($where) {
-        $where = (!is_null($where)) ? $criteriaBuilder->getStringWhere() : "";
-        $parametos = (!is_null($where)) ? $criteriaBuilder->getParametrosWhere() : null;
+    public function deletarCriteria(WhereCriteriaBuider $criteriaBuider) {
+        $where = (!is_null($criteriaBuider)) ? $criteriaBuilder->getStringWhere() : "";
+        $parametos = (!is_null($criteriaBuider)) ? $criteriaBuilder->getParametrosWhere() : null;
         $q = $this->db->prepare("DELETE FROM {$this->table} WHERE {$where}");
+        if (!$q->execute($parametos)) {
+            throw new \Exception("Erro de Sql " . $this->geraErro($this->db->errorInfo()), 0, null);
+        }
         return $q->execute($parametos);
+    }
+
+    /**
+     *
+     * @deprecated since version 1
+     */
+    public function deletar($where) {
+        return $this->executa("DELETE FROM {$this->table} WHERE {$where}");
     }
 
     /**
@@ -107,15 +113,18 @@ abstract class DAO {
     public function listarCriteria(WhereCriteriaBuider $criteriaBuilder = null) {
         $where = (!is_null($criteriaBuilder)) ? $criteriaBuilder->getStringWhere() : "";
         $parametos = (!is_null($criteriaBuilder)) ? $criteriaBuilder->getParametrosWhere() : null;
-        $sql = "SELECT * FROM {$this->table} {$where}";
+        $sql = "SELECT * FROM {$this->table} " . $where . " ";
         if ($where != "") {
             $q = $this->db->prepare($sql);
             foreach ($parametos as $k => $v) {
-                $q->bindParam($k, $v);
+                $r = $q->bindValue($k, $v, $criteriaBuilder->getTiposWhere()[$k]);
             }
             $q->execute();
         } else {
             $q = $this->db->query($sql);
+            if (!$q) {
+                throw new \Exception("Erro de Sql " . $this->geraErro($this->db->errorInfo()), 0, null);
+            }
         }
         return $this->arryToList($q);
     }
@@ -146,7 +155,7 @@ abstract class DAO {
     public function carregarCriteria($campo, $id) {
         $criteriaBuilder = new WhereCriteriaBuider();
         $criteriaBuilder->addAnd(WhereCriteria::addIgual($campo, $id));
-        $o = $this->listar($criteriaBuilder);
+        $o = $this->listarCriteria($criteriaBuilder);
 
         if (count($o) > 0) {
             return $o[0];
@@ -156,6 +165,7 @@ abstract class DAO {
     }
 
     public function beginTransaction() {
+        $this->db->setAttribute(\PDO::ATTR_AUTOCOMMIT, FALSE);
         $this->db->beginTransaction();
     }
 
