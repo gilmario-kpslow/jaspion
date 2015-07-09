@@ -14,15 +14,24 @@ class WhereCriteriaBuider {
     private $and;
     private $or;
     private $parametro;
+    private $tipo;
+    private $order;
 
     public function __construct() {
         $this->and = array();
         $this->or = array();
         $this->parametro = array();
+        $this->tipo = array();
+        $this->order = array();
     }
 
     public function addAnd(WhereCriteria $criteria) {
         $this->adicionaParametro($this->and, $criteria);
+        return $this;
+    }
+
+    public function addOrderBy(WhereCriteria $criteria) {
+        $this->adicionaParametro($this->order, $criteria);
         return $this;
     }
 
@@ -36,6 +45,7 @@ class WhereCriteriaBuider {
         if (!is_null($criteria->getParametro())) {
             foreach ($criteria->getParametro() as $key => $value) {
                 $this->parametro[$key] = $value;
+                $this->tipo[$key] = $criteria->getTipo()[$key];
             }
         }
     }
@@ -55,6 +65,12 @@ class WhereCriteriaBuider {
                     $sql .= $this->getOr();
                 }
             }
+
+            if (!empty($this->order)) {
+                $sql .=" ORDER BY ";
+                $sql .= $this->getOrder();
+            }
+
             return $sql;
         }
         return "";
@@ -64,8 +80,16 @@ class WhereCriteriaBuider {
         return $this->parametro;
     }
 
+    public function getTiposWhere() {
+        return $this->tipo;
+    }
+
     private function getAnd() {
         return implode(" AND ", $this->and);
+    }
+
+    private function getOrder() {
+        return implode(" , ", $this->order);
     }
 
     private function getOr() {
