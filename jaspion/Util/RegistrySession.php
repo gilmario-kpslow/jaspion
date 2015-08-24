@@ -42,7 +42,7 @@ class RegistrySession {
     }
 
     public function getSessao($k) {
-        if (isset($_SESSION[$name])) {
+        if (isset($_SESSION[$k])) {
             return unserialize($_SESSION[$name]);
         } else {
             return false;
