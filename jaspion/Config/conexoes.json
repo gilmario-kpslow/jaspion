@@ -3,16 +3,16 @@
             "identificador" : "Fire",
             "driver": "firebird",
             "host": "localhost",
-            "dbname": "localhost:BANCOTESTE.GDB",
-            "username": "SYSDBA",
-            "password": "masterkey"
+            "dbname": "localhost:SEUBANCO.GDB",
+            "username": "USUARIO",
+            "password": "SENHA"
         },
         {
             "identificador" : "Mysql", 
             "driver": "mysql",
             "host": "localhost",
-            "dbname": "bancoTeste",
-            "username": "root",
-            "password": "123@teste"
+            "dbname": "seubanco",
+            "username": "usuario",
+            "password": "senha"
         }]
 }
