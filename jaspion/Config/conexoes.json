@@ -3,7 +3,7 @@
             "identificador" : "Fire",
             "driver": "firebird",
             "host": "localhost",
-            "dbname": "localhost:DBDSI.GDB",
+            "dbname": "localhost:BANCOTESTE.GDB",
             "username": "SYSDBA",
             "password": "masterkey"
         },
@@ -11,8 +11,8 @@
             "identificador" : "Mysql", 
             "driver": "mysql",
             "host": "localhost",
-            "dbname": "caucaia",
+            "dbname": "bancoTeste",
             "username": "root",
-            "password": "aln25526"
+            "password": "123@teste"
         }]
 }
