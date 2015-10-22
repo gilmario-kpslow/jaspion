@@ -176,5 +176,18 @@ abstract class DAO {
     public function rollBack() {
         $this->db->rollBack();
     }
+    
+    protected function executaPrepare($sql, Array $parametos) {
+        $q = $this->db->prepare($sql);
+        foreach ($parametos as $k => $v) {
+            $r = $q->bindValue($k, $v);
+        }
+        $q->execute();
+        if ($q) {
+            return $q;
+        } else {
+            throw new \Exception("Erro de Sql " . $this->geraErro($this->db->errorInfo()), 0, null);
+        }
+    }
 
 }
