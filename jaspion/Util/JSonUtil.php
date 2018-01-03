@@ -26,7 +26,7 @@ class JSonUtil {
         $reflection = new ReflectionClass(get_class($object));
         foreach ($reflection->getProperties() as $atributos) {
             $get = "get" . ucfirst($atributos->name);
-            $json .= JSonUtil::criaJSONvariavel($atributos->name, $object->$get()) . ",";
+            $json .= JSonUtil::criaJSONvariavel($atributos->name, trim($object->$get())) . ",";
         }
         $json = substr($json, 0, -1);
         $json .= "}";
