@@ -21,6 +21,7 @@ class WhereCriteria {
     const STARTING_WITH = "STARTING WITH";
     const ASC = "ASC";
     const DESC = "DESC";
+    const IN = "IN";
 
     protected $sql;
     private $parametro;
@@ -31,10 +32,23 @@ class WhereCriteria {
         if (is_null($valor)) {
             $this->sql = $campo . " " . $operador;
         } else {
-            $parametroCampo = ":" . strtolower($campo);
-            $this->sql = $campo . " " . $operador . " " . $parametroCampo;
-            $this->parametro = array($parametroCampo => $valor);
-            $this->tipo = array($parametroCampo => $tipo);
+            if ($operador == self::IN) {
+                $inPar = array();
+                $parametrosCampo = array();
+                for ($i = 0; $i < count($valor); $i++) {
+                    $parametroCampo = ":parin" . $i;
+                    $parametrosCampo[$parametroCampo] = $valor[$i];
+                    $this->tipo = array($parametroCampo => $tipo);
+                    $inPar[] = $parametroCampo;
+                }
+                $this->parametro = $parametrosCampo;
+                $this->sql = $campo . " " . $operador . " (" . implode(',', $inPar) . ")";
+            } else {
+                $parametroCampo = ":" . strtolower($campo);
+                $this->sql = $campo . " " . $operador . " " . $parametroCampo;
+                $this->parametro = array($parametroCampo => $valor);
+                $this->tipo = array($parametroCampo => $tipo);
+            }
         }
     }
 
@@ -100,6 +114,10 @@ class WhereCriteria {
 
     public static function addStartingWith($campo, $valor) {
         return new WhereCriteria($campo, self::STARTING_WITH, $valor);
+    }
+    
+    public static function addIn($campo, Array $valores) {
+        return new WhereCriteria($campo, self::IN, $valores);
     }
 
 }
